@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TradeLyser Digital Marketing Plan (6 Months)</title>
+
+  <!-- Icons -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+  <style>
+    :root{
+      --bg: #0b1220;
+      --card: rgba(255,255,255,0.06);
+      --card2: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.12);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.70);
+      --brand: #7c3aed;
+      --brand2: #06b6d4;
+      --radius: 16px;
+      --shadow: 0 18px 50px rgba(0,0,0,0.35);
+      --max: 1100px;
+
+      --t-fast: 160ms;
+      --t-med: 260ms;
+      --t-slow: 520ms;
+      --ease: cubic-bezier(.2,.8,.2,1);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    html{ scroll-behavior: smooth; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 500px at 15% 0%, rgba(124,58,237,0.28), transparent 60%),
+        radial-gradient(900px 500px at 85% 10%, rgba(6,182,212,0.20), transparent 60%),
+        linear-gradient(180deg, #070c16 0%, var(--bg) 45%, #070c16 100%);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+
+    /* ====== subtle animated background glow ====== */
+    .bg-glow{
+      position: fixed;
+      inset: -20%;
+      pointer-events: none;
+      z-index: -1;
+      background:
+        radial-gradient(420px 280px at 15% 20%, rgba(124,58,237,0.14), transparent 60%),
+        radial-gradient(520px 340px at 80% 30%, rgba(6,182,212,0.11), transparent 60%),
+        radial-gradient(420px 300px at 55% 90%, rgba(124,58,237,0.10), transparent 65%);
+      filter: blur(8px);
+      animation: floatGlow 12s var(--ease) infinite alternate;
+      opacity: 0.9;
+    }
+    @keyframes floatGlow{
+      0%{ transform: translate3d(0,0,0) scale(1); }
+      100%{ transform: translate3d(0,-18px,0) scale(1.02); }
+    }
+
+    .wrap{
+      width: min(var(--max), 92vw);
+      margin: 0 auto;
+      padding: 28px 0 70px;
+    }
+
+    /* ====== Header ====== */
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(11,18,32,0.92), rgba(11,18,32,0.70));
+      border-bottom: 1px solid var(--border);
+      transform: translateZ(0);
+    }
+
+    .header-inner{
+      width: min(var(--max), 92vw);
+      margin: 0 auto;
+      padding: 14px 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      user-select:none;
+    }
+
+    .logo{
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display:grid;
+      place-items:center;
+      background: linear-gradient(135deg, rgba(124,58,237,0.95), rgba(6,182,212,0.85));
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 12px 30px rgba(124,58,237,0.22);
+      transition: transform var(--t-med) var(--ease);
+    }
+    .brand:hover .logo{ transform: rotate(-2deg) scale(1.03); }
+
+    .brand small{
+      display:block;
+      color: var(--muted);
+      font-weight: 600;
+      margin-top: 2px;
+      font-size: 12.5px;
+    }
+
+    nav{
+      display:flex;
+      gap: 8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .nav-pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 9px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-size: 12.5px;
+      transition: transform var(--t-fast) var(--ease),
+                  background var(--t-fast) var(--ease),
+                  border-color var(--t-fast) var(--ease),
+                  color var(--t-fast) var(--ease);
+      white-space:nowrap;
+      will-change: transform;
+    }
+
+    .nav-pill:hover{
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.20);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+
+    /* Mobile: keep it clean */
+    @media (max-width: 920px){
+      nav{ display:none; }
+    }
+
+    /* ====== Hero ====== */
+    .hero{
+      margin-top: 22px;
+      padding: 22px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow:hidden;
+      animation: enterUp var(--t-slow) var(--ease) both;
+    }
+
+    .hero:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(540px 220px at 15% 0%, rgba(124,58,237,0.18), transparent 60%),
+        radial-gradient(560px 220px at 85% 10%, rgba(6,182,212,0.14), transparent 60%);
+      pointer-events:none;
+      opacity:0.95;
+    }
+
+    .hero > *{ position: relative; }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      font-size: 12px;
+      user-select:none;
+    }
+
+    .hero h1{
+      margin: 10px 0 10px;
+      font-size: clamp(24px, 3vw, 38px);
+      letter-spacing: -0.6px;
+      line-height: 1.12;
+    }
+
+    .hero p{
+      margin: 0;
+      color: var(--muted);
+      max-width: 78ch;
+      font-size: 15px;
+    }
+
+    .pill-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      font-size: 13px;
+      transition: transform var(--t-fast) var(--ease),
+                  border-color var(--t-fast) var(--ease),
+                  background var(--t-fast) var(--ease);
+      cursor: default;
+    }
+    .pill:hover{
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.20);
+      background: rgba(255,255,255,0.07);
+    }
+
+    .pill i{
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      display:grid;
+      place-items:center;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.9);
+    }
+
+    /* ====== Sections ====== */
+    .section{
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.22);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--ease);
+    }
+    .section.in{
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
+      margin-bottom: 12px;
+    }
+
+    .section-title{
+      display:flex;
+      align-items:flex-start;
+      gap: 12px;
+    }
+
+    .section-icon{
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      display:grid;
+      place-items:center;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: linear-gradient(135deg, rgba(124,58,237,0.30), rgba(6,182,212,0.20));
+      transition: transform var(--t-med) var(--ease);
+    }
+    .section:hover .section-icon{ transform: rotate(-2deg); }
+
+    .section-title h2{
+      margin:0;
+      font-size: 17px;
+      letter-spacing: -0.2px;
+    }
+
+    .section-title p{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13.5px;
+      max-width: 86ch;
+    }
+
+    .badges{
+      display:flex;
+      gap: 8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    /* ====== Cards ====== */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .card{
+      grid-column: span 6;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      transition: transform var(--t-fast) var(--ease),
+                  border-color var(--t-fast) var(--ease),
+                  background var(--t-fast) var(--ease);
+      will-change: transform;
+    }
+
+    .card:hover{
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.20);
+      background: rgba(255,255,255,0.06);
+    }
+
+    @media (max-width: 920px){
+      .card{ grid-column: span 12; }
+    }
+
+    .card h3{
+      margin: 0 0 10px;
+      font-size: 14.5px;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+
+    .card h3 i{
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      display:grid;
+      place-items:center;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+    }
+
+    ul{
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+    li{ margin: 6px 0; }
+
+    .note{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(6,182,212,0.25);
+      background: rgba(6,182,212,0.10);
+      color: rgba(255,255,255,0.86);
+      font-size: 13px;
+    }
+
+    /* ====== Month blocks (accordion) ====== */
+    .month{
+      margin-top: 12px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.14);
+      overflow:hidden;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--ease);
+    }
+    .month.in{
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    details.month{
+      border-radius: var(--radius);
+    }
+    details.month > summary{
+      list-style: none;
+      cursor: pointer;
+      user-select: none;
+      outline: none;
+    }
+    details.month > summary::-webkit-details-marker{ display:none; }
+
+    .month-head{
+      padding: 14px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      position: relative;
+    }
+
+    .month-left{
+      display:flex;
+      gap: 12px;
+      align-items:flex-start;
+    }
+
+    .month-num{
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      display:grid;
+      place-items:center;
+      font-weight: 800;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: linear-gradient(135deg, rgba(124,58,237,0.40), rgba(6,182,212,0.30));
+      flex: 0 0 auto;
+    }
+
+    .month-head h3{
+      margin:0;
+      font-size: 15.5px;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+
+    .chev{
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      display:grid;
+      place-items:center;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      transition: transform var(--t-med) var(--ease);
+      color: rgba(255,255,255,0.88);
+      flex: 0 0 auto;
+    }
+
+    details[open] .chev{ transform: rotate(180deg); }
+
+    .month-head p{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13.5px;
+      max-width: 88ch;
+    }
+
+    .tags{
+      display:flex;
+      gap: 8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      align-items:flex-start;
+    }
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      font-size: 12px;
+      white-space:nowrap;
+    }
+
+    .month-body{
+      padding: 14px;
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      animation: expand var(--t-slow) var(--ease) both;
+    }
+    @keyframes expand{
+      from{ opacity:0; transform: translateY(-6px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    .mcard{
+      grid-column: span 6;
+      padding: 13px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      min-height: 140px;
+      transition: transform var(--t-fast) var(--ease),
+                  border-color var(--t-fast) var(--ease),
+                  background var(--t-fast) var(--ease);
+    }
+    .mcard:hover{
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.20);
+      background: rgba(255,255,255,0.06);
+    }
+
+    @media (max-width: 920px){
+      .mcard{ grid-column: span 12; }
+    }
+
+    .mcard h4{
+      margin: 0 0 9px;
+      font-size: 14px;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+
+    .mcard h4 i{
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      display:grid;
+      place-items:center;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .mcard p{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .mcard .mini{
+      margin-top: 8px;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* ====== Floating action buttons ====== */
+    .fab{
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      z-index: 30;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 11px 13px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.92);
+      cursor:pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: transform var(--t-fast) var(--ease),
+                  background var(--t-fast) var(--ease),
+                  border-color var(--t-fast) var(--ease);
+      box-shadow: 0 14px 34px rgba(0,0,0,0.28);
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:hover{
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.10);
+      border-color: rgba(255,255,255,0.22);
+    }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(124,58,237,0.78), rgba(6,182,212,0.55));
+      border-color: rgba(255,255,255,0.22);
+    }
+
+    /* ====== Toast ====== */
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%) translateY(16px);
+      opacity: 0;
+      pointer-events:none;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(10px);
+      color: rgba(255,255,255,0.90);
+      font-size: 12.5px;
+      transition: opacity var(--t-med) var(--ease), transform var(--t-med) var(--ease);
+      z-index: 40;
+      box-shadow: 0 16px 38px rgba(0,0,0,0.35);
+      user-select:none;
+    }
+    .toast.show{
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ====== Footer ====== */
+    footer{
+      margin-top: 22px;
+      text-align:center;
+      color: rgba(255,255,255,0.55);
+      font-size: 12.5px;
+    }
+
+    /* ====== Enter animation ====== */
+    @keyframes enterUp{
+      from{ opacity:0; transform: translateY(10px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    /* ====== Reduced motion ====== */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+      .bg-glow{ display:none; }
+    }
+
+    /* Print */
+    @media print{
+      body{ background:#fff; color:#111827; }
+      header, .fab, .toast, .bg-glow{ display:none !important; }
+      .hero, .section, details.month{ box-shadow:none; background:#fff; border: 1px solid #e5e7eb; }
+      .pill, .badge, .tag{ background:#fff; color:#111827; border:1px solid #e5e7eb; }
+      .note{ background:#e0f2fe; border:1px solid #bae6fd; color:#0f172a; }
+      p, li{ color:#374151 !important; }
+      details.month{ page-break-inside: avoid; }
+      details.month[open] > summary{ border-bottom: 1px solid #e5e7eb; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <header>
+    <div class="header-inner">
+      <div class="brand" title="TradeLyser Marketing Plan">
+        <div class="logo"><i class="fa-solid fa-chart-line"></i></div>
+        <div>
+          TradeLyser
+          <small>Digital Marketing Plan (6 Months)</small>
+        </div>
+      </div>
+
+      <nav aria-label="Section navigation">
+        <a class="nav-pill" href="#strategy"><i class="fa-solid fa-compass"></i>Strategy</a>
+        <a class="nav-pill" href="#m1"><i class="fa-solid fa-flag"></i>M1</a>
+        <a class="nav-pill" href="#m2"><i class="fa-solid fa-graduation-cap"></i>M2</a>
+        <a class="nav-pill" href="#m3"><i class="fa-solid fa-bolt"></i>M3</a>
+        <a class="nav-pill" href="#m4"><i class="fa-solid fa-users"></i>M4</a>
+        <a class="nav-pill" href="#m5"><i class="fa-solid fa-handshake"></i>M5</a>
+        <a class="nav-pill" href="#m6"><i class="fa-solid fa-bullhorn"></i>M6</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="badge"><i class="fa-solid fa-layer-group"></i>Interactive HTML presentation</div>
+      <h1>TradeLyser Digital Marketing Plan</h1>
+      <p>
+        TradeLyser is not a “nice to have” product. It is a behavior change platform.
+        We are not selling software. We are selling control, clarity, and consistency.
+      </p>
+
+      <div class="pill-row" role="list">
+        <div class="pill" role="listitem"><i class="fa-solid fa-brain"></i>Discipline is the edge</div>
+        <div class="pill" role="listitem"><i class="fa-solid fa-database"></i>Your data is the truth</div>
+        <div class="pill" role="listitem"><i class="fa-solid fa-user-tie"></i>Feels like a coach</div>
+      </div>
+    </section>
+
+    <section id="strategy" class="section">
+      <div class="section-head">
+        <div class="section-title">
+          <div class="section-icon"><i class="fa-solid fa-compass"></i></div>
+          <div>
+            <h2>Big Picture Strategy</h2>
+            <p>
+              This is a behavior change product. The plan shifts trader mindset, proves value through data,
+              and positions TradeLyser as a coach that builds discipline.
+            </p>
+          </div>
+        </div>
+
+        <div class="badges">
+          <div class="badge"><i class="fa-solid fa-book-open"></i>Education first</div>
+          <div class="badge"><i class="fa-solid fa-shield"></i>Trust-led</div>
+          <div class="badge"><i class="fa-solid fa-rocket"></i>Activation later</div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3><i class="fa-solid fa-bullseye"></i>Positioning</h3>
+          <ul>
+            <li>Not software. Control, clarity, and consistency.</li>
+            <li>Discipline matters more than indicators.</li>
+            <li>TradeLyser feels like a coach, not a tool.</li>
+          </ul>
+          <div class="note">Core message: Discipline is the edge. Your data tells the truth.</div>
+        </div>
+
+        <div class="card">
+          <h3><i class="fa-solid fa-route"></i>6-Month Path</h3>
+          <ul>
+            <li>Month 1: Foundation and authority</li>
+            <li>Month 2: Education + product awareness</li>
+            <li>Month 3: Activation + trials</li>
+            <li>Month 4: Community + retention</li>
+            <li>Month 5: Scale via partnerships</li>
+            <li>Month 6: Brand authority + PR</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Months as accordions -->
+    <details id="m1" class="month" open>
+      <summary class="month-head">
+        <div class="month-left">
+          <div class="month-num">1</div>
+          <div>
+            <h3>Month 1: Foundation + Positioning (Launch Month) <span class="chev"><i class="fa-solid fa-chevron-down"></i></span></h3>
+            <p>Establish brand, authority and clarity. No aggressive selling. Only education and trust.</p>
+          </div>
+        </div>
+        <div class="tags">
+          <div class="tag"><i class="fa-solid fa-gears"></i>SEO setup</div>
+          <div class="tag"><i class="fa-solid fa-video"></i>Authority content</div>
+          <div class="tag"><i class="fa-solid fa-ban"></i>No paid ads</div>
+        </div>
+      </summary>
+
+      <div class="month-body">
+        <div class="mcard">
+          <h4><i class="fa-solid fa-magnifying-glass"></i>SEO</h4>
+          <ul class="mini">
+            <li>Title/meta + H1/H2 structure for core pages</li>
+            <li>Sitemap.xml + robots.txt</li>
+            <li>Schema: SaaS product + FAQs</li>
+            <li>Page speed + internal linking</li>
+          </ul>
+          <p style="margin-top:8px;"><strong>Keyword buckets</strong>: trading journal, trading journal india, options trading journal, zerodha trade tracking, trading analytics, trading discipline, trading journal excel</p>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-file-lines"></i>SEO Content</h4>
+          <ul class="mini">
+            <li>What is a trading journal and why most traders fail without one</li>
+            <li>Why discipline matters more than indicators</li>
+            <li>Best trading journal for Indian traders</li>
+            <li>How to review your trades like a professional</li>
+          </ul>
+          <div class="note">Goal is indexing and relevance, not traffic.</div>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-share-nodes"></i>Social Media</h4>
+          <ul class="mini">
+            <li>Platforms: Instagram, YouTube Shorts, X, Facebook</li>
+            <li>Instagram: 4 reels/week</li>
+            <li>YouTube Shorts: 4/week</li>
+            <li>X: 1 post/day</li>
+            <li>Facebook: 3/week</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-microphone-lines"></i>Founder + Influencers</h4>
+          <ul class="mini">
+            <li>Founder Voice Series: 2 videos/week, 3 to 5 minutes</li>
+            <li>Topics: journey, why TradeLyser, psychology, discipline frameworks</li>
+            <li>Influencers: identify 30 creators and engage (no paid deals yet)</li>
+          </ul>
+          <div class="note">Paid ads: none. Do not spend before message-market fit.</div>
+        </div>
+      </div>
+    </details>
+
+    <details id="m2" class="month">
+      <summary class="month-head">
+        <div class="month-left">
+          <div class="month-num">2</div>
+          <div>
+            <h3>Month 2: Education + Product Awareness <span class="chev"><i class="fa-solid fa-chevron-down"></i></span></h3>
+            <p>Make traders aware that a better way exists. Education stays first, product becomes visible.</p>
+          </div>
+        </div>
+        <div class="tags">
+          <div class="tag"><i class="fa-solid fa-pen-nib"></i>Blogs</div>
+          <div class="tag"><i class="fa-solid fa-scale-balanced"></i>Comparisons</div>
+          <div class="tag"><i class="fa-solid fa-retweet"></i>Retargeting</div>
+        </div>
+      </summary>
+
+      <div class="month-body">
+        <div class="mcard">
+          <h4><i class="fa-solid fa-magnifying-glass"></i>SEO</h4>
+          <ul class="mini">
+            <li>Publish 6 blog posts</li>
+            <li>2 comparison pages: TradeLyser vs Excel, TradeLyser vs TraderSync</li>
+            <li>Start internal linking</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-share-nodes"></i>Social Media</h4>
+          <ul class="mini">
+            <li>Instagram + YouTube: 5 reels/week</li>
+            <li>X: 2 posts/day + 1 thread/week</li>
+            <li>Add screen recordings: board, tagging, AI insights</li>
+          </ul>
+          <div class="note">Education first, product second.</div>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-video"></i>Founder Content</h4>
+          <ul class="mini">
+            <li>Weekly Trading Talk: 10 to 15 mins</li>
+            <li>Cut into 5 to 7 shorts</li>
+            <li>Topics: overtrading, emotions, pro reviews, what data reveals</li>
+          </ul>
+          <p style="margin-top:8px;"><strong>Soft CTA</strong>: “If you are serious about improving, tools like TradeLyser exist for this exact reason.”</p>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-bullhorn"></i>Influencers + Ads</h4>
+          <ul class="mini">
+            <li>Outreach 10 micro influencers (10k to 50k)</li>
+            <li>Offer free pro access, early features, revenue share</li>
+            <li>Paid ads: retargeting only, small test budget</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details id="m3" class="month">
+      <summary class="month-head">
+        <div class="month-left">
+          <div class="month-num">3</div>
+          <div>
+            <h3>Month 3: Activation + Trial Push <span class="chev"><i class="fa-solid fa-chevron-down"></i></span></h3>
+            <p>Drive trials and broker connections. Stronger product focus with proof-driven stories.</p>
+          </div>
+        </div>
+        <div class="tags">
+          <div class="tag"><i class="fa-solid fa-link"></i>Broker pages</div>
+          <div class="tag"><i class="fa-solid fa-bolt"></i>Cold traffic</div>
+        </div>
+      </summary>
+
+      <div class="month-body">
+        <div class="mcard">
+          <h4><i class="fa-solid fa-magnifying-glass"></i>SEO</h4>
+          <ul class="mini">
+            <li>Publish 8 blogs</li>
+            <li>Broker pages: Zerodha, Groww, Angel One</li>
+          </ul>
+          <div class="note">Broker pages convert well because intent is specific.</div>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-share-nodes"></i>Social Mix</h4>
+          <ul class="mini">
+            <li>40% education</li>
+            <li>40% product use cases</li>
+            <li>20% testimonials and stories</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-star"></i>Influencer Demo Campaign</h4>
+          <ul class="mini">
+            <li>1 full demo video</li>
+            <li>2 short clips + 1 story set</li>
+            <li>Message: “This is how I review my trades now.”</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-rectangle-ad"></i>Paid Ads</h4>
+          <ul class="mini">
+            <li>Start cold traffic: Google Search + Meta Reels</li>
+            <li>Keywords: trading journal, options trading journal, trading analytics, zerodha journal</li>
+            <li>Creatives: problem-based, not feature-based</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details id="m4" class="month">
+      <summary class="month-head">
+        <div class="month-left">
+          <div class="month-num">4</div>
+          <div>
+            <h3>Month 4: Community + Retention <span class="chev"><i class="fa-solid fa-chevron-down"></i></span></h3>
+            <p>Turn users into loyal users by building discipline habits and visible progress.</p>
+          </div>
+        </div>
+        <div class="tags">
+          <div class="tag"><i class="fa-solid fa-users"></i>Challenge</div>
+          <div class="tag"><i class="fa-solid fa-repeat"></i>Habit loop</div>
+        </div>
+      </summary>
+
+      <div class="month-body">
+        <div class="mcard">
+          <h4><i class="fa-solid fa-trophy"></i>Discipline Challenge</h4>
+          <ul class="mini">
+            <li>4-week challenge: journal daily, tag trades, max loss rule</li>
+            <li>Weekly reviews</li>
+            <li>Rewards: free month, feature access, public recognition</li>
+          </ul>
+          <div class="note">Builds habit and identity, drives retention.</div>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-share-nodes"></i>Social Content</h4>
+          <ul class="mini">
+            <li>Challenge updates</li>
+            <li>User progress stories</li>
+            <li>Behind-the-scenes</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-microphone-lines"></i>Podcast</h4>
+          <ul class="mini">
+            <li>User journey reviews</li>
+            <li>Mistakes fixed using discipline</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-file-signature"></i>SEO + Influencers</h4>
+          <ul class="mini">
+            <li>Publish case studies and user stories</li>
+            <li>Get influencers to join the challenge publicly</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details id="m5" class="month">
+      <summary class="month-head">
+        <div class="month-left">
+          <div class="month-num">5</div>
+          <div>
+            <h3>Month 5: Scale + Partnerships <span class="chev"><i class="fa-solid fa-chevron-down"></i></span></h3>
+            <p>Lower CAC through partnerships and mentor distribution. Scale only what already works.</p>
+          </div>
+        </div>
+        <div class="tags">
+          <div class="tag"><i class="fa-solid fa-handshake"></i>Partners</div>
+          <div class="tag"><i class="fa-solid fa-chalkboard-user"></i>Mentors</div>
+        </div>
+      </summary>
+
+      <div class="month-body">
+        <div class="mcard">
+          <h4><i class="fa-solid fa-building-columns"></i>Broker Partnerships</h4>
+          <ul class="mini">
+            <li>Co-webinars</li>
+            <li>Co-email campaigns</li>
+            <li>In-app placements</li>
+          </ul>
+          <div class="note">Message: “Trade better. Trade disciplined.”</div>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-chalkboard-user"></i>Mentor Program</h4>
+          <ul class="mini">
+            <li>Target 20 mentors</li>
+            <li>Provide mentor dashboard, codes, marketing kit</li>
+            <li>Mentors bring mentees</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-star"></i>Influencers</h4>
+          <ul class="mini">
+            <li>Sign 3 larger creators</li>
+            <li>Long-term contracts</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-rectangle-ad"></i>Paid Ads</h4>
+          <ul class="mini">
+            <li>Increase budget only on winning creatives</li>
+            <li>Kill everything else</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details id="m6" class="month">
+      <summary class="month-head">
+        <div class="month-left">
+          <div class="month-num">6</div>
+          <div>
+            <h3>Month 6: Brand Authority + PR <span class="chev"><i class="fa-solid fa-chevron-down"></i></span></h3>
+            <p>Make TradeLyser a category name. Own trading discipline as a conversation in India.</p>
+          </div>
+        </div>
+        <div class="tags">
+          <div class="tag"><i class="fa-solid fa-newspaper"></i>PR</div>
+          <div class="tag"><i class="fa-solid fa-podcast"></i>Podcast</div>
+        </div>
+      </summary>
+
+      <div class="month-body">
+        <div class="mcard">
+          <h4><i class="fa-solid fa-newspaper"></i>PR + Media</h4>
+          <ul class="mini">
+            <li>Founder interviews</li>
+            <li>Articles: discipline, AI in trading, Indian trader psychology</li>
+          </ul>
+          <div class="note">Objective: category association with discipline + performance analytics.</div>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-podcast"></i>TradeLyser Podcast</h4>
+          <ul class="mini">
+            <li>Weekly episodes</li>
+            <li>Guests: traders, mentors, psychologists, market experts</li>
+            <li>Repurpose into shorts</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-crown"></i>Authority Outcomes</h4>
+          <ul class="mini">
+            <li>More branded searches</li>
+            <li>Higher trial conversion due to trust</li>
+            <li>Mentor and creator ecosystem becomes a growth engine</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-flag-checkered"></i>Category Goal</h4>
+          <p>
+            TradeLyser becomes the default name in the “trading discipline” conversation,
+            driven by proof, community, and repeatable distribution.
+          </p>
+        </div>
+      </div>
+    </details>
+
+    <footer>
+      Developed by Flyers Soft
+    </footer>
+  </main>
+
+  <!-- Floating buttons -->
+  <div class="fab" aria-label="Quick actions">
+    <button class="btn" id="expandAllBtn" type="button"><i class="fa-solid fa-plus-minus"></i><span>Expand all</span></button>
+    <button class="btn primary" id="topBtn" type="button"><i class="fa-solid fa-arrow-up"></i><span>Top</span></button>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (function(){
+      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Fade-in on scroll
+      const revealTargets = [...document.querySelectorAll('.section, details.month')];
+
+      if (!prefersReduced && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              io.unobserve(e.target);
+            }
+          }
+        }, { threshold: 0.12 });
+
+        revealTargets.forEach(el => io.observe(el));
+      } else {
+        revealTargets.forEach(el => el.classList.add('in'));
+      }
+
+      // Toast helper
+      const toast = document.getElementById('toast');
+      let toastTimer = null;
+
+      function showToast(msg){
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 1400);
+      }
+
+      // Expand/Collapse all months
+      const expandBtn = document.getElementById('expandAllBtn');
+      const months = [...document.querySelectorAll('details.month')];
+
+      function allOpen(){
+        return months.length > 0 && months.every(d => d.open);
+      }
+
+      function setExpandLabel(){
+        const isAllOpen = allOpen();
+        const label = isAllOpen ? 'Collapse all' : 'Expand all';
+        expandBtn.querySelector('span').textContent = label;
+        expandBtn.querySelector('i').className = isAllOpen ? 'fa-solid fa-minus' : 'fa-solid fa-plus';
+      }
+
+      if (expandBtn) {
+        setExpandLabel();
+
+        expandBtn.addEventListener('click', () => {
+          const open = !allOpen();
+          months.forEach(d => d.open = open);
+          setExpandLabel();
+          showToast(open ? 'Expanded all months' : 'Collapsed all months');
+        });
+
+        months.forEach(d => d.addEventListener('toggle', setExpandLabel));
+      }
+
+      // Back to top
+      const topBtn = document.getElementById('topBtn');
+      if (topBtn) {
+        topBtn.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: prefersReduced ? 'auto' : 'smooth' });
+          showToast('Back to top');
+        });
+      }
+
+      // Offset anchor scrolling (header height)
+      const headerOffset = 74;
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', (e) => {
+          const id = a.getAttribute('href');
+          const el = document.querySelector(id);
+          if(!el) return;
+          e.preventDefault();
+          const y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+          window.scrollTo({ top: y, behavior: prefersReduced ? 'auto' : 'smooth' });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
