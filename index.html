@@ -5,12 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TradeLyser Digital Marketing Plan (6 Months)</title>
 
-  <!-- Icons -->
+  <!-- Minimal, clean icons (no JS needed) -->
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    integrity="sha512-Avb2QiuDEEvB4bZJYdftzHqGvJm4sWjV7ZgqQ1vN1Kc1pJc9cXjvG8qS1Q0y3y3g2E7m0nYhV0p0wQ9sZcZQ9A=="
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
   />
@@ -18,59 +17,59 @@
   <style>
     :root{
       --bg: #0b1220;
-      --panel: rgba(255,255,255,0.06);
-      --panel-2: rgba(255,255,255,0.09);
+      --card: rgba(255,255,255,0.06);
+      --card2: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.12);
       --text: rgba(255,255,255,0.92);
       --muted: rgba(255,255,255,0.70);
-      --faint: rgba(255,255,255,0.55);
-      --border: rgba(255,255,255,0.12);
-      --shadow: 0 20px 60px rgba(0,0,0,0.45);
-      --radius: 18px;
-
-      --brand: #7c3aed;   /* purple */
-      --brand-2: #06b6d4; /* cyan */
-      --ok: #22c55e;
-      --warn: #f59e0b;
-      --danger: #ef4444;
+      --brand: #7c3aed;
+      --brand2: #06b6d4;
+      --radius: 16px;
+      --shadow: 0 18px 50px rgba(0,0,0,0.35);
+      --max: 1100px;
     }
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
-      background: radial-gradient(1000px 600px at 10% 0%, rgba(124,58,237,0.30), transparent 60%),
-                  radial-gradient(900px 500px at 90% 10%, rgba(6,182,212,0.22), transparent 55%),
-                  linear-gradient(180deg, #070c16 0%, #0b1220 40%, #070c16 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--text);
-      overflow-x:hidden;
+      background:
+        radial-gradient(900px 500px at 15% 0%, rgba(124,58,237,0.28), transparent 60%),
+        radial-gradient(900px 500px at 85% 10%, rgba(6,182,212,0.20), transparent 60%),
+        linear-gradient(180deg, #070c16 0%, var(--bg) 45%, #070c16 100%);
+      line-height: 1.5;
     }
 
-    a{ color: inherit; text-decoration:none; }
-    .container{
-      width:min(1140px, 92vw);
-      margin:0 auto;
-      padding: 28px 0 80px;
+    a{ color:inherit; text-decoration:none; }
+
+    .wrap{
+      width: min(var(--max), 92vw);
+      margin: 0 auto;
+      padding: 28px 0 70px;
     }
 
-    /* Top bar */
-    .topbar{
-      position:sticky;
-      top:0;
-      z-index:50;
-      backdrop-filter: blur(12px);
-      background: linear-gradient(180deg, rgba(11,18,32,0.88), rgba(11,18,32,0.62));
+    /* Header */
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(11,18,32,0.92), rgba(11,18,32,0.70));
       border-bottom: 1px solid var(--border);
     }
-    .topbar-inner{
-      width:min(1140px, 92vw);
-      margin:0 auto;
+
+    .header-inner{
+      width: min(var(--max), 92vw);
+      margin: 0 auto;
       padding: 14px 0;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap: 14px;
     }
+
     .brand{
       display:flex;
       align-items:center;
@@ -78,164 +77,162 @@
       font-weight: 700;
       letter-spacing: 0.2px;
     }
-    .brand .logo{
-      width: 40px;
-      height: 40px;
+
+    .logo{
+      width: 38px;
+      height: 38px;
       border-radius: 12px;
-      background: linear-gradient(135deg, rgba(124,58,237,0.95), rgba(6,182,212,0.90));
       display:grid;
       place-items:center;
-      box-shadow: 0 12px 30px rgba(124,58,237,0.25);
+      background: linear-gradient(135deg, rgba(124,58,237,0.95), rgba(6,182,212,0.85));
       border: 1px solid rgba(255,255,255,0.18);
-    }
-    .brand .logo i{ font-size: 18px; }
-    .brand small{
-      display:block;
-      font-weight: 600;
-      color: var(--muted);
-      margin-top: 2px;
-      letter-spacing: 0.2px;
+      box-shadow: 0 12px 30px rgba(124,58,237,0.22);
     }
 
-    .nav{
+    .brand small{
+      display:block;
+      color: var(--muted);
+      font-weight: 600;
+      margin-top: 2px;
+      font-size: 12.5px;
+    }
+
+    nav{
       display:flex;
-      gap: 10px;
+      gap: 8px;
       flex-wrap:wrap;
       justify-content:flex-end;
-      align-items:center;
     }
-    .chip{
+
+    .nav-pill{
       display:inline-flex;
       align-items:center;
       gap: 8px;
-      padding: 10px 12px;
+      padding: 9px 11px;
       border-radius: 999px;
       border: 1px solid var(--border);
       background: rgba(255,255,255,0.04);
       color: var(--muted);
-      font-size: 13px;
-      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
-      user-select:none;
+      font-size: 12.5px;
+      transition: 0.15s ease;
       white-space:nowrap;
     }
-    .chip:hover{
-      transform: translateY(-1px);
+
+    .nav-pill:hover{
       background: rgba(255,255,255,0.07);
       border-color: rgba(255,255,255,0.20);
       color: var(--text);
+      transform: translateY(-1px);
     }
-    .chip i{ opacity: 0.9; }
 
     /* Hero */
     .hero{
       margin-top: 22px;
-      padding: 28px;
+      padding: 22px;
       border-radius: var(--radius);
-      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
       border: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
       box-shadow: var(--shadow);
-      position:relative;
-      overflow:hidden;
-    }
-    .hero:before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background: radial-gradient(600px 260px at 20% 0%, rgba(124,58,237,0.35), transparent 60%),
-                  radial-gradient(520px 260px at 80% 20%, rgba(6,182,212,0.28), transparent 60%);
-      opacity:0.9;
-      pointer-events:none;
-    }
-    .hero-inner{
-      position:relative;
-      display:grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 20px;
-      align-items:stretch;
-    }
-    @media (max-width: 920px){
-      .hero-inner{ grid-template-columns: 1fr; }
     }
 
-    .kicker{
-      display:inline-flex;
-      gap: 10px;
-      align-items:center;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(0,0,0,0.18);
-      color: var(--muted);
-      font-size: 13px;
-      width: fit-content;
-    }
-    .kicker .dot{
-      width:8px;height:8px;border-radius:999px;
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      box-shadow: 0 0 0 4px rgba(124,58,237,0.18);
-    }
-    h1{
-      margin: 14px 0 10px;
-      font-size: clamp(26px, 3.3vw, 40px);
-      line-height: 1.1;
+    .hero h1{
+      margin: 8px 0 10px;
+      font-size: clamp(24px, 3vw, 38px);
       letter-spacing: -0.6px;
+      line-height: 1.12;
     }
-    .lead{
-      margin: 0 0 18px;
+
+    .hero p{
+      margin: 0;
       color: var(--muted);
-      font-size: 15.5px;
-      line-height: 1.6;
-      max-width: 64ch;
+      max-width: 78ch;
+      font-size: 15px;
     }
-    .pillars{
+
+    .pill-row{
       display:flex;
       flex-wrap:wrap;
       gap: 10px;
-      margin-top: 10px;
+      margin-top: 14px;
     }
+
     .pill{
       display:inline-flex;
       align-items:center;
       gap: 10px;
       padding: 10px 12px;
       border-radius: 14px;
-      background: rgba(255,255,255,0.06);
       border: 1px solid var(--border);
-      color: var(--text);
-      font-size: 13.5px;
+      background: rgba(255,255,255,0.05);
+      font-size: 13px;
     }
+
     .pill i{
       width: 28px;
       height: 28px;
       border-radius: 10px;
       display:grid;
       place-items:center;
-      background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.88);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.9);
     }
 
-    .hero-side{
-      border-radius: 16px;
+    /* Sections */
+    .section{
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: var(--radius);
       border: 1px solid var(--border);
-      background: rgba(0,0,0,0.16);
-      padding: 16px;
-      display:flex;
-      flex-direction:column;
-      gap: 12px;
+      background: rgba(255,255,255,0.05);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.22);
     }
-    .stat{
+
+    .section-head{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap: 10px;
-      padding: 12px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.10);
+      gap: 12px;
+      flex-wrap:wrap;
+      margin-bottom: 12px;
     }
-    .stat strong{ font-size: 14px; letter-spacing: 0.2px; }
-    .stat span{ color: var(--muted); font-size: 12.5px; display:block; margin-top: 4px; line-height: 1.35; }
+
+    .section-title{
+      display:flex;
+      align-items:flex-start;
+      gap: 12px;
+    }
+
+    .section-icon{
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      display:grid;
+      place-items:center;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: linear-gradient(135deg, rgba(124,58,237,0.30), rgba(6,182,212,0.20));
+    }
+
+    .section-title h2{
+      margin:0;
+      font-size: 17px;
+      letter-spacing: -0.2px;
+    }
+
+    .section-title p{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13.5px;
+      max-width: 86ch;
+    }
+
+    .badges{
+      display:flex;
+      gap: 8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
     .badge{
       display:inline-flex;
       align-items:center;
@@ -244,174 +241,123 @@
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,0.14);
       background: rgba(255,255,255,0.05);
+      color: var(--muted);
       font-size: 12px;
-      color: var(--muted);
-      white-space:nowrap;
-    }
-    .badge i{ color: rgba(255,255,255,0.90); }
-
-    /* Sections */
-    .section{
-      margin-top: 22px;
-      padding: 22px;
-      border-radius: var(--radius);
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
-      box-shadow: 0 14px 50px rgba(0,0,0,0.25);
-    }
-    .section-header{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 14px;
-      margin-bottom: 14px;
-      flex-wrap:wrap;
-    }
-    .section-title{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-    }
-    .section-title .icon{
-      width: 44px;
-      height: 44px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, rgba(124,58,237,0.35), rgba(6,182,212,0.25));
-      border: 1px solid rgba(255,255,255,0.16);
-      display:grid;
-      place-items:center;
-    }
-    .section-title .icon i{ font-size: 18px; color: rgba(255,255,255,0.92); }
-    .section-title h2{
-      margin:0;
-      font-size: 18px;
-      letter-spacing: -0.2px;
-    }
-    .section-title p{
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 13.5px;
-      line-height: 1.5;
-      max-width: 70ch;
-    }
-    .section-meta{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
     }
 
+    /* Layout grids */
     .grid{
       display:grid;
       grid-template-columns: repeat(12, 1fr);
-      gap: 14px;
-      margin-top: 14px;
+      gap: 12px;
+      margin-top: 12px;
     }
+
     .card{
       grid-column: span 6;
-      background: rgba(255,255,255,0.05);
+      padding: 14px;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 16px;
-      padding: 16px;
-      min-height: 140px;
+      background: rgba(255,255,255,0.04);
     }
+
     @media (max-width: 920px){
       .card{ grid-column: span 12; }
+      nav{ display:none; } /* keep it clean on mobile */
     }
+
     .card h3{
       margin: 0 0 10px;
+      font-size: 14.5px;
       display:flex;
       align-items:center;
       gap: 10px;
-      font-size: 15px;
-      letter-spacing: -0.2px;
     }
+
     .card h3 i{
-      width: 30px;
-      height: 30px;
-      border-radius: 12px;
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
       display:grid;
       place-items:center;
-      background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.88);
+      background: rgba(255,255,255,0.05);
     }
+
     ul{
       margin: 0;
       padding-left: 18px;
       color: var(--muted);
       font-size: 13.5px;
-      line-height: 1.55;
     }
     li{ margin: 6px 0; }
+
     .note{
       margin-top: 10px;
       padding: 10px 12px;
-      border-radius: 14px;
-      background: rgba(6,182,212,0.10);
+      border-radius: 12px;
       border: 1px solid rgba(6,182,212,0.25);
+      background: rgba(6,182,212,0.10);
       color: rgba(255,255,255,0.86);
       font-size: 13px;
-      line-height: 1.5;
     }
 
-    /* Timeline months */
-    .months{
-      margin-top: 18px;
-      display:grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 14px;
-    }
+    /* Month blocks */
     .month{
-      grid-column: span 12;
-      border-radius: 18px;
+      margin-top: 12px;
+      border-radius: var(--radius);
       border: 1px solid rgba(255,255,255,0.12);
       background: rgba(0,0,0,0.14);
       overflow:hidden;
     }
+
     .month-head{
+      padding: 14px;
       display:flex;
-      justify-content:space-between;
-      gap: 14px;
-      padding: 16px;
       align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
       border-bottom: 1px solid rgba(255,255,255,0.10);
       background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-      flex-wrap:wrap;
     }
-    .month-head .left{
+
+    .month-left{
       display:flex;
-      align-items:flex-start;
       gap: 12px;
+      align-items:flex-start;
     }
-    .month-index{
-      width: 44px;
-      height: 44px;
+
+    .month-num{
+      width: 42px;
+      height: 42px;
       border-radius: 16px;
       display:grid;
       place-items:center;
-      background: linear-gradient(135deg, rgba(124,58,237,0.42), rgba(6,182,212,0.32));
-      border: 1px solid rgba(255,255,255,0.16);
       font-weight: 800;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: linear-gradient(135deg, rgba(124,58,237,0.40), rgba(6,182,212,0.30));
     }
+
     .month-head h3{
       margin:0;
-      font-size: 16px;
-      letter-spacing: -0.2px;
+      font-size: 15.5px;
     }
+
     .month-head p{
       margin: 6px 0 0;
       color: var(--muted);
       font-size: 13.5px;
-      line-height: 1.5;
-      max-width: 80ch;
+      max-width: 88ch;
     }
-    .month-tags{
+
+    .tags{
       display:flex;
       gap: 8px;
       flex-wrap:wrap;
       justify-content:flex-end;
     }
+
     .tag{
       display:inline-flex;
       align-items:center;
@@ -426,202 +372,135 @@
     }
 
     .month-body{
-      padding: 16px;
+      padding: 14px;
       display:grid;
       grid-template-columns: repeat(12, 1fr);
-      gap: 14px;
+      gap: 12px;
     }
-    .month-card{
+
+    .mcard{
       grid-column: span 6;
-      border-radius: 16px;
+      padding: 13px;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.12);
       background: rgba(255,255,255,0.04);
-      padding: 14px;
       min-height: 140px;
     }
+
     @media (max-width: 920px){
-      .month-card{ grid-column: span 12; }
+      .mcard{ grid-column: span 12; }
     }
-    .month-card h4{
-      margin:0 0 10px;
+
+    .mcard h4{
+      margin: 0 0 9px;
       font-size: 14px;
       display:flex;
       align-items:center;
       gap: 10px;
     }
-    .month-card h4 i{
+
+    .mcard h4 i{
       width: 28px;
       height: 28px;
-      border-radius: 12px;
+      border-radius: 10px;
       display:grid;
       place-items:center;
-      background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.88);
+      background: rgba(255,255,255,0.05);
     }
-    .month-card .mini{
+
+    .mcard p{
+      margin: 0;
       color: var(--muted);
-      font-size: 12.8px;
-      line-height: 1.55;
-      margin:0;
+      font-size: 13px;
     }
-    .mini-list{
+
+    .mcard .mini{
       margin-top: 8px;
       padding-left: 18px;
       color: var(--muted);
-      font-size: 12.8px;
-      line-height: 1.55;
-    }
-    .cta{
-      margin-top: 18px;
-      display:flex;
-      flex-wrap:wrap;
-      gap: 12px;
-      align-items:center;
-      justify-content:space-between;
-      padding: 16px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: linear-gradient(135deg, rgba(124,58,237,0.18), rgba(6,182,212,0.12));
-    }
-    .cta strong{ font-size: 14px; }
-    .cta span{ color: var(--muted); font-size: 13px; display:block; margin-top: 4px; line-height: 1.45; }
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      gap: 10px;
-      padding: 11px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.06);
-      color: var(--text);
-      cursor:pointer;
-      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
-      user-select:none;
       font-size: 13px;
-      font-weight: 600;
-      white-space:nowrap;
-    }
-    .btn:hover{
-      transform: translateY(-1px);
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.22);
-    }
-    .btn.primary{
-      background: linear-gradient(135deg, rgba(124,58,237,0.75), rgba(6,182,212,0.55));
-      border-color: rgba(255,255,255,0.20);
     }
 
     /* Footer */
     footer{
-      margin-top: 28px;
-      color: var(--faint);
-      font-size: 12.5px;
+      margin-top: 22px;
       text-align:center;
-      padding: 10px 0 0;
+      color: rgba(255,255,255,0.55);
+      font-size: 12.5px;
     }
 
-    /* Print friendly */
+    /* Smooth anchor */
+    html{ scroll-behavior: smooth; }
+
+    /* Print */
     @media print{
-      body{ background:#ffffff; color:#111827; }
-      .topbar{ display:none; }
-      .hero, .section, .month{ box-shadow:none; background:#ffffff; border: 1px solid #e5e7eb; }
-      .chip, .badge, .tag, .btn{ border: 1px solid #e5e7eb; background:#ffffff; color:#111827; }
-      .note{ border:1px solid #bae6fd; background:#e0f2fe; color:#0f172a; }
-      .muted, .lead, ul, li, p{ color:#374151 !important; }
+      body{ background:#fff; color:#111827; }
+      header{ display:none; }
+      .hero, .section, .month{ box-shadow:none; background:#fff; border: 1px solid #e5e7eb; }
+      .pill, .badge, .tag{ background:#fff; color:#111827; border:1px solid #e5e7eb; }
+      .note{ background:#e0f2fe; border:1px solid #bae6fd; color:#0f172a; }
+      p, li{ color:#374151 !important; }
     }
   </style>
 </head>
 
 <body>
-  <!-- Topbar -->
-  <div class="topbar">
-    <div class="topbar-inner">
+  <header>
+    <div class="header-inner">
       <div class="brand">
-        <div class="logo" aria-hidden="true"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="logo"><i class="fa-solid fa-chart-line"></i></div>
         <div>
           TradeLyser
           <small>Digital Marketing Plan (6 Months)</small>
         </div>
       </div>
 
-      <nav class="nav" aria-label="Quick navigation">
-        <a class="chip" href="#strategy"><i class="fa-solid fa-compass"></i>Strategy</a>
-        <a class="chip" href="#month-1"><i class="fa-solid fa-flag"></i>Month 1</a>
-        <a class="chip" href="#month-2"><i class="fa-solid fa-graduation-cap"></i>Month 2</a>
-        <a class="chip" href="#month-3"><i class="fa-solid fa-bolt"></i>Month 3</a>
-        <a class="chip" href="#month-4"><i class="fa-solid fa-users"></i>Month 4</a>
-        <a class="chip" href="#month-5"><i class="fa-solid fa-handshake"></i>Month 5</a>
-        <a class="chip" href="#month-6"><i class="fa-solid fa-bullhorn"></i>Month 6</a>
+      <nav aria-label="Section navigation">
+        <a class="nav-pill" href="#strategy"><i class="fa-solid fa-compass"></i>Strategy</a>
+        <a class="nav-pill" href="#m1"><i class="fa-solid fa-flag"></i>M1</a>
+        <a class="nav-pill" href="#m2"><i class="fa-solid fa-graduation-cap"></i>M2</a>
+        <a class="nav-pill" href="#m3"><i class="fa-solid fa-bolt"></i>M3</a>
+        <a class="nav-pill" href="#m4"><i class="fa-solid fa-users"></i>M4</a>
+        <a class="nav-pill" href="#m5"><i class="fa-solid fa-handshake"></i>M5</a>
+        <a class="nav-pill" href="#m6"><i class="fa-solid fa-bullhorn"></i>M6</a>
       </nav>
     </div>
-  </div>
+  </header>
 
-  <div class="container">
-    <!-- Hero -->
-    <header class="hero">
-      <div class="hero-inner">
-        <div>
-          <div class="kicker"><span class="dot"></span>Presentation-ready single page</div>
-          <h1>TradeLyser Digital Marketing Plan</h1>
-          <p class="lead">
-            TradeLyser is not a “nice to have” product. It is a behavior change platform.
-            We are not selling software. We are selling control, clarity, and consistency.
-          </p>
+  <main class="wrap">
+    <section class="hero">
+      <p class="badge"><i class="fa-solid fa-layer-group"></i>Presentation layout in HTML</p>
+      <h1>TradeLyser Digital Marketing Plan</h1>
+      <p>
+        TradeLyser is not a “nice to have” product. It is a behavior change platform.
+        We are not selling software. We are selling control, clarity, and consistency.
+      </p>
 
-          <div class="pillars" role="list">
-            <div class="pill" role="listitem"><i class="fa-solid fa-brain"></i>Discipline is the edge</div>
-            <div class="pill" role="listitem"><i class="fa-solid fa-database"></i>Your data is the truth</div>
-            <div class="pill" role="listitem"><i class="fa-solid fa-user-tie"></i>Feels like a coach</div>
-          </div>
-        </div>
-
-        <aside class="hero-side" aria-label="Plan summary">
-          <div class="stat">
-            <div>
-              <strong>Approach</strong>
-              <span>Education first, trust second, product third.</span>
-            </div>
-            <div class="badge"><i class="fa-solid fa-shield-heart"></i>Trust-led</div>
-          </div>
-
-          <div class="stat">
-            <div>
-              <strong>Channels</strong>
-              <span>SEO, Social, Founder content, Influencers, Podcast, Paid media.</span>
-            </div>
-            <div class="badge"><i class="fa-solid fa-layer-group"></i>Full funnel</div>
-          </div>
-
-          <div class="stat">
-            <div>
-              <strong>6-Month Outcome</strong>
-              <span>From launch positioning to category authority in trading discipline.</span>
-            </div>
-            <div class="badge"><i class="fa-solid fa-trophy"></i>Category build</div>
-          </div>
-        </aside>
+      <div class="pill-row" role="list">
+        <div class="pill" role="listitem"><i class="fa-solid fa-brain"></i>Discipline is the edge</div>
+        <div class="pill" role="listitem"><i class="fa-solid fa-database"></i>Your data is the truth</div>
+        <div class="pill" role="listitem"><i class="fa-solid fa-user-tie"></i>Feels like a coach</div>
       </div>
-    </header>
+    </section>
 
-    <!-- Strategy -->
     <section id="strategy" class="section">
-      <div class="section-header">
+      <div class="section-head">
         <div class="section-title">
-          <div class="icon"><i class="fa-solid fa-compass"></i></div>
+          <div class="section-icon"><i class="fa-solid fa-compass"></i></div>
           <div>
             <h2>Big Picture Strategy</h2>
             <p>
-              TradeLyser changes behavior. The plan is built to shift mindset, prove value through data,
-              and position TradeLyser as a coach that builds discipline.
+              This is a behavior change product. The plan shifts trader mindset, proves value through data,
+              and positions TradeLyser as a coach that builds discipline.
             </p>
           </div>
         </div>
 
-        <div class="section-meta">
-          <div class="badge"><i class="fa-solid fa-book-open"></i>Educate</div>
-          <div class="badge"><i class="fa-solid fa-hand-holding-heart"></i>Build trust</div>
-          <div class="badge"><i class="fa-solid fa-rocket"></i>Activate trials</div>
+        <div class="badges">
+          <div class="badge"><i class="fa-solid fa-book-open"></i>Education first</div>
+          <div class="badge"><i class="fa-solid fa-shield"></i>Trust-led</div>
+          <div class="badge"><i class="fa-solid fa-rocket"></i>Activation later</div>
         </div>
       </div>
 
@@ -633,445 +512,364 @@
             <li>Discipline matters more than indicators.</li>
             <li>TradeLyser feels like a coach, not a tool.</li>
           </ul>
-          <div class="note">
-            Key message: Discipline is the edge. Your data tells the truth.
-          </div>
+          <div class="note">Core message: Discipline is the edge. Your data tells the truth.</div>
         </div>
 
         <div class="card">
-          <h3><i class="fa-solid fa-route"></i>Growth Path</h3>
+          <h3><i class="fa-solid fa-route"></i>6-Month Path</h3>
           <ul>
-            <li>Month 1: Foundation and authority.</li>
-            <li>Month 2: Education + product awareness.</li>
-            <li>Month 3: Activation + trials.</li>
-            <li>Month 4: Community + retention.</li>
-            <li>Month 5: Scale via partnerships.</li>
-            <li>Month 6: Brand authority + PR.</li>
+            <li>Month 1: Foundation and authority</li>
+            <li>Month 2: Education + product awareness</li>
+            <li>Month 3: Activation + trials</li>
+            <li>Month 4: Community + retention</li>
+            <li>Month 5: Scale via partnerships</li>
+            <li>Month 6: Brand authority + PR</li>
           </ul>
         </div>
       </div>
     </section>
 
-    <!-- Months -->
-    <section class="section" aria-label="Month by month plan">
-      <div class="section-header">
-        <div class="section-title">
-          <div class="icon"><i class="fa-solid fa-calendar-check"></i></div>
+    <!-- MONTH 1 -->
+    <section id="m1" class="month">
+      <div class="month-head">
+        <div class="month-left">
+          <div class="month-num">1</div>
           <div>
-            <h2>Month-by-Month Execution</h2>
-            <p>Clear monthly objectives with channel-level actions across SEO, Social, Founder, Influencers, Podcast, and Paid.</p>
+            <h3>Month 1: Foundation + Positioning (Launch Month)</h3>
+            <p>Establish brand, authority and clarity. No aggressive selling. Only education and trust.</p>
           </div>
         </div>
-        <div class="section-meta">
-          <div class="badge"><i class="fa-solid fa-chart-simple"></i>Measurable</div>
-          <div class="badge"><i class="fa-solid fa-sitemap"></i>Structured</div>
-          <div class="badge"><i class="fa-solid fa-wand-magic-sparkles"></i>Brand-first</div>
+        <div class="tags">
+          <div class="tag"><i class="fa-solid fa-gears"></i>SEO setup</div>
+          <div class="tag"><i class="fa-solid fa-video"></i>Authority content</div>
+          <div class="tag"><i class="fa-solid fa-ban"></i>No paid ads</div>
         </div>
       </div>
 
-      <div class="months">
+      <div class="month-body">
+        <div class="mcard">
+          <h4><i class="fa-solid fa-magnifying-glass"></i>SEO</h4>
+          <ul class="mini">
+            <li>Title/meta + H1/H2 structure for core pages</li>
+            <li>Sitemap.xml + robots.txt</li>
+            <li>Schema: SaaS product + FAQs</li>
+            <li>Page speed + internal linking</li>
+          </ul>
+          <p style="margin-top:8px;"><strong>Keyword buckets</strong>: trading journal, trading journal india, options trading journal, zerodha trade tracking, trading analytics, trading discipline, trading journal excel</p>
+        </div>
 
-        <!-- Month 1 -->
-        <article id="month-1" class="month">
-          <div class="month-head">
-            <div class="left">
-              <div class="month-index">1</div>
-              <div>
-                <h3>Month 1: Foundation + Positioning (Launch Month)</h3>
-                <p>Establish brand, authority, and clarity. No aggressive selling. Only education and trust.</p>
-              </div>
-            </div>
-            <div class="month-tags">
-              <div class="tag"><i class="fa-solid fa-magnifying-glass"></i>SEO setup</div>
-              <div class="tag"><i class="fa-solid fa-video"></i>Social authority</div>
-              <div class="tag"><i class="fa-solid fa-user"></i>Founder trust</div>
-              <div class="tag"><i class="fa-solid fa-ban"></i>No paid ads</div>
-            </div>
+        <div class="mcard">
+          <h4><i class="fa-solid fa-file-lines"></i>SEO Content</h4>
+          <ul class="mini">
+            <li>What is a trading journal and why most traders fail without one</li>
+            <li>Why discipline matters more than indicators</li>
+            <li>Best trading journal for Indian traders</li>
+            <li>How to review your trades like a professional</li>
+          </ul>
+          <div class="note">Goal is indexing and relevance, not traffic.</div>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-share-nodes"></i>Social Media</h4>
+          <ul class="mini">
+            <li>Platforms: Instagram, YouTube Shorts, X, Facebook</li>
+            <li>Instagram: 4 reels/week</li>
+            <li>YouTube Shorts: 4/week</li>
+            <li>X: 1 post/day</li>
+            <li>Facebook: 3/week</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-microphone-lines"></i>Founder + Influencers</h4>
+          <ul class="mini">
+            <li>Founder Voice Series: 2 videos/week, 3 to 5 minutes</li>
+            <li>Topics: journey, why TradeLyser, psychology, discipline frameworks</li>
+            <li>Influencers: identify 30 creators and engage (no paid deals yet)</li>
+          </ul>
+          <div class="note">Paid ads: none. Do not spend before message-market fit.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MONTH 2 -->
+    <section id="m2" class="month">
+      <div class="month-head">
+        <div class="month-left">
+          <div class="month-num">2</div>
+          <div>
+            <h3>Month 2: Education + Product Awareness</h3>
+            <p>Make traders aware that a better way exists. Education stays first, product becomes visible.</p>
           </div>
-
-          <div class="month-body">
-            <div class="month-card">
-              <h4><i class="fa-solid fa-magnifying-glass"></i>SEO</h4>
-              <p class="mini"><strong>Technical Setup</strong></p>
-              <ul class="mini-list">
-                <li>Title tags, meta descriptions, H1/H2 structure for core pages</li>
-                <li>Sitemap.xml + robots.txt</li>
-                <li>Schema for SaaS product + FAQs</li>
-                <li>Page speed optimization + internal linking structure</li>
-              </ul>
-              <p class="mini" style="margin-top:10px;"><strong>Keyword buckets</strong>: trading journal, trading discipline, options trading journal, zerodha trade tracking, trading analytics, trading journal excel</p>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-file-lines"></i>SEO Content</h4>
-              <ul class="mini-list">
-                <li>What is a trading journal and why most traders fail without one</li>
-                <li>Why discipline matters more than indicators</li>
-                <li>Best trading journal for Indian traders</li>
-                <li>How to review your trades like a professional</li>
-              </ul>
-              <div class="note">Goal is indexing and relevance, not traffic.</div>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-share-nodes"></i>Social Media</h4>
-              <p class="mini"><strong>Platforms</strong>: Instagram, YouTube Shorts, X, Facebook</p>
-              <p class="mini" style="margin-top:8px;"><strong>Frequency</strong></p>
-              <ul class="mini-list">
-                <li>Instagram: 4 reels per week</li>
-                <li>YouTube Shorts: 4 per week</li>
-                <li>X: 1 post per day</li>
-                <li>Facebook: 3 per week</li>
-              </ul>
-              <p class="mini" style="margin-top:8px;"><strong>Content buckets</strong>: psychology, discipline mistakes, data-driven trading, founder content, light demos</p>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-microphone-lines"></i>Founder + Influencers</h4>
-              <p class="mini"><strong>Founder Voice Series</strong></p>
-              <ul class="mini-list">
-                <li>2 videos per week, 3 to 5 minutes</li>
-                <li>Topics: journey, why TradeLyser, psychology, discipline frameworks</li>
-              </ul>
-              <p class="mini" style="margin-top:10px;"><strong>Influencers</strong>: Identify 30 creators and engage consistently. No paid deals yet.</p>
-              <div class="note">Paid ads: none. Do not spend before message-market fit.</div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Month 2 -->
-        <article id="month-2" class="month">
-          <div class="month-head">
-            <div class="left">
-              <div class="month-index">2</div>
-              <div>
-                <h3>Month 2: Education + Product Awareness</h3>
-                <p>Make traders aware that a better way exists. Education stays first, product becomes visible.</p>
-              </div>
-            </div>
-            <div class="month-tags">
-              <div class="tag"><i class="fa-solid fa-pen-nib"></i>Blogs + comparisons</div>
-              <div class="tag"><i class="fa-solid fa-clapperboard"></i>More screen recordings</div>
-              <div class="tag"><i class="fa-solid fa-retweet"></i>Retargeting only</div>
-            </div>
-          </div>
-
-          <div class="month-body">
-            <div class="month-card">
-              <h4><i class="fa-solid fa-magnifying-glass"></i>SEO</h4>
-              <ul class="mini-list">
-                <li>6 blog posts</li>
-                <li>2 comparison pages: TradeLyser vs Excel, TradeLyser vs TraderSync</li>
-                <li>Start internal linking across all content</li>
-              </ul>
-              <p class="mini" style="margin-top:10px;">
-                Sample topics: track options trades properly, review intraday trades, why Excel journaling fails, mistakes you repeat without knowing
-              </p>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-share-nodes"></i>Social Media</h4>
-              <ul class="mini-list">
-                <li>Instagram + YouTube: 5 reels per week</li>
-                <li>X: 2 posts per day + 1 thread per week</li>
-                <li>Shift: more screen recordings of strategy board, tagging, AI insights</li>
-              </ul>
-              <div class="note">Education first, product second. Keep the tone authoritative.</div>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-video"></i>Founder Content</h4>
-              <ul class="mini-list">
-                <li>Weekly Trading Talk: 1 long video per week (10 to 15 mins)</li>
-                <li>Cut into 5 to 7 shorts</li>
-                <li>Topics: overtrading, emotions, pro reviews, what data reveals about mindset</li>
-              </ul>
-              <p class="mini" style="margin-top:10px;"><strong>Soft CTA</strong>: “If you are serious about improving, tools like TradeLyser exist for this exact reason.”</p>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-bullhorn"></i>Influencers + Ads</h4>
-              <p class="mini"><strong>Influencer outreach</strong></p>
-              <ul class="mini-list">
-                <li>10 micro influencers (10k to 50k)</li>
-                <li>Offer free pro access, early feature access, revenue share</li>
-                <li>No heavy cash deals</li>
-              </ul>
-              <p class="mini" style="margin-top:10px;"><strong>Paid ads</strong>: Retargeting only (site visitors, profile visitors, video viewers). Small budget tests.</p>
-            </div>
-          </div>
-        </article>
-
-        <!-- Month 3 -->
-        <article id="month-3" class="month">
-          <div class="month-head">
-            <div class="left">
-              <div class="month-index">3</div>
-              <div>
-                <h3>Month 3: Activation + Trial Push</h3>
-                <p>Push trials and broker connections. Stronger product focus with proof-driven stories.</p>
-              </div>
-            </div>
-            <div class="month-tags">
-              <div class="tag"><i class="fa-solid fa-link"></i>Broker pages</div>
-              <div class="tag"><i class="fa-solid fa-user-check"></i>Use cases + stories</div>
-              <div class="tag"><i class="fa-solid fa-bolt"></i>Cold traffic starts</div>
-            </div>
-          </div>
-
-          <div class="month-body">
-            <div class="month-card">
-              <h4><i class="fa-solid fa-magnifying-glass"></i>SEO</h4>
-              <ul class="mini-list">
-                <li>8 new blogs</li>
-                <li>3 broker-specific pages (high intent)</li>
-                <li>Examples: Zerodha users, Groww users, Angel One users</li>
-              </ul>
-              <div class="note">Broker pages convert well because the intent is specific.</div>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-share-nodes"></i>Social Media</h4>
-              <p class="mini"><strong>Content mix</strong></p>
-              <ul class="mini-list">
-                <li>40% education</li>
-                <li>40% product use cases</li>
-                <li>20% testimonials and user stories</li>
-              </ul>
-              <p class="mini" style="margin-top:10px;">
-                Example angles: found losing strategy, one rule improved consistency, discipline score changed behavior
-              </p>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-star"></i>Influencer Demo Campaign</h4>
-              <ul class="mini-list">
-                <li>Each influencer: 1 full demo video</li>
-                <li>2 short clips + 1 story set</li>
-                <li>Core message: “This is how I review my trades now.”</li>
-              </ul>
-              <div class="note">Trust scales here. This is the turning point.</div>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-chart-line"></i>Podcast + Paid Ads</h4>
-              <p class="mini"><strong>Podcast guests</strong>: 1 trader, 1 mentor, 1 finance creator (conversational)</p>
-              <p class="mini" style="margin-top:10px;"><strong>Paid ads</strong>: Start cold traffic on Google Search + Meta Reels</p>
-              <ul class="mini-list">
-                <li>Keywords: trading journal, options trading journal, trading analytics, zerodha journal</li>
-                <li>Creatives: problem-based, not feature-based</li>
-              </ul>
-            </div>
-          </div>
-        </article>
-
-        <!-- Month 4 -->
-        <article id="month-4" class="month">
-          <div class="month-head">
-            <div class="left">
-              <div class="month-index">4</div>
-              <div>
-                <h3>Month 4: Community + Retention</h3>
-                <p>Turn users into loyal users by building discipline habits and public progress.</p>
-              </div>
-            </div>
-            <div class="month-tags">
-              <div class="tag"><i class="fa-solid fa-users"></i>Challenge</div>
-              <div class="tag"><i class="fa-solid fa-repeat"></i>Habit loop</div>
-              <div class="tag"><i class="fa-solid fa-file-signature"></i>Case studies</div>
-            </div>
-          </div>
-
-          <div class="month-body">
-            <div class="month-card">
-              <h4><i class="fa-solid fa-trophy"></i>Discipline Challenge</h4>
-              <ul class="mini-list">
-                <li>4-week challenge</li>
-                <li>Journal daily, tag every trade, follow max loss rule</li>
-                <li>Weekly review</li>
-              </ul>
-              <p class="mini" style="margin-top:10px;"><strong>Rewards</strong>: free month, feature access, public recognition</p>
-              <div class="note">This builds identity and long-term retention.</div>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-share-nodes"></i>Social Media</h4>
-              <ul class="mini-list">
-                <li>Challenge updates</li>
-                <li>User progress stories</li>
-                <li>Behind-the-scenes content</li>
-              </ul>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-microphone-lines"></i>Podcast</h4>
-              <ul class="mini-list">
-                <li>Review user journeys</li>
-                <li>Mistakes fixed using discipline</li>
-                <li>Lessons from weekly reviews</li>
-              </ul>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-magnifying-glass"></i>SEO + Influencers</h4>
-              <ul class="mini-list">
-                <li>Publish case studies and user stories</li>
-                <li>Invite influencers to join the challenge publicly</li>
-              </ul>
-              <div class="note">User stories rank and convert. Influencer participation multiplies reach.</div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Month 5 -->
-        <article id="month-5" class="month">
-          <div class="month-head">
-            <div class="left">
-              <div class="month-index">5</div>
-              <div>
-                <h3>Month 5: Scale + Partnerships</h3>
-                <p>Lower CAC through broker and mentor distribution. Scale only what already works.</p>
-              </div>
-            </div>
-            <div class="month-tags">
-              <div class="tag"><i class="fa-solid fa-handshake"></i>Partnerships</div>
-              <div class="tag"><i class="fa-solid fa-chalkboard-user"></i>Mentor program</div>
-              <div class="tag"><i class="fa-solid fa-filter-circle-dollar"></i>Performance scaling</div>
-            </div>
-          </div>
-
-          <div class="month-body">
-            <div class="month-card">
-              <h4><i class="fa-solid fa-building-columns"></i>Broker Partnerships</h4>
-              <ul class="mini-list">
-                <li>Co-webinars</li>
-                <li>Co-email campaigns</li>
-                <li>In-app placements</li>
-              </ul>
-              <div class="note">Message: “Trade better. Trade disciplined.”</div>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-chalkboard-user"></i>Mentor Program</h4>
-              <ul class="mini-list">
-                <li>Target 20 mentors</li>
-                <li>Provide mentor dashboard, discount codes, marketing kit</li>
-                <li>Mentors bring mentees into TradeLyser</li>
-              </ul>
-              <div class="note">This creates a repeatable distribution loop.</div>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-star"></i>Influencers</h4>
-              <ul class="mini-list">
-                <li>Sign 3 larger creators</li>
-                <li>Long-term contracts</li>
-                <li>Consistent demos + real review workflows</li>
-              </ul>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-rectangle-ad"></i>Paid Ads</h4>
-              <ul class="mini-list">
-                <li>Increase budget only on winning creatives</li>
-                <li>Kill everything else</li>
-                <li>Scale with proof and performance data</li>
-              </ul>
-              <div class="note">No emotional scaling. Only what works gets budget.</div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Month 6 -->
-        <article id="month-6" class="month">
-          <div class="month-head">
-            <div class="left">
-              <div class="month-index">6</div>
-              <div>
-                <h3>Month 6: Brand Authority + PR</h3>
-                <p>Make TradeLyser a category name. Own the conversation around discipline in India.</p>
-              </div>
-            </div>
-            <div class="month-tags">
-              <div class="tag"><i class="fa-solid fa-bullhorn"></i>PR</div>
-              <div class="tag"><i class="fa-solid fa-newspaper"></i>Media</div>
-              <div class="tag"><i class="fa-solid fa-podcast"></i>TradeLyser Podcast</div>
-            </div>
-          </div>
-
-          <div class="month-body">
-            <div class="month-card">
-              <h4><i class="fa-solid fa-newspaper"></i>PR + Media</h4>
-              <ul class="mini-list">
-                <li>Founder interviews</li>
-                <li>Articles: trading discipline, AI in trading, Indian trader psychology</li>
-                <li>Thought leadership distribution on social + community</li>
-              </ul>
-              <div class="note">Objective: category association with discipline and performance analytics.</div>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-podcast"></i>TradeLyser Podcast Launch</h4>
-              <ul class="mini-list">
-                <li>Weekly episodes</li>
-                <li>Guests: traders, mentors, psychologists, market experts</li>
-                <li>Repurpose each episode into short-form clips</li>
-              </ul>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-crown"></i>Authority Outcomes</h4>
-              <ul class="mini-list">
-                <li>More organic branded searches</li>
-                <li>Higher conversion on trials due to trust</li>
-                <li>Creator and mentor ecosystem becomes a growth engine</li>
-              </ul>
-            </div>
-
-            <div class="month-card">
-              <h4><i class="fa-solid fa-flag-checkered"></i>Category Goal</h4>
-              <p class="mini">
-                TradeLyser is not another tool. It is the discipline layer for traders.
-                The final outcome is strong positioning, strong proof, and repeatable distribution.
-              </p>
-              <div class="note">TradeLyser becomes the default name in the “trading discipline” conversation.</div>
-            </div>
-          </div>
-        </article>
+        </div>
+        <div class="tags">
+          <div class="tag"><i class="fa-solid fa-pen-nib"></i>Blogs</div>
+          <div class="tag"><i class="fa-solid fa-scale-balanced"></i>Comparisons</div>
+          <div class="tag"><i class="fa-solid fa-retweet"></i>Retargeting</div>
+        </div>
       </div>
 
-      <div class="cta" role="region" aria-label="Presentation actions">
-        <div>
-          <strong>Ready to present</strong>
-          <span>Use this as a web-based deck. Print it as PDF, or present directly in a browser.</span>
+      <div class="month-body">
+        <div class="mcard">
+          <h4><i class="fa-solid fa-magnifying-glass"></i>SEO</h4>
+          <ul class="mini">
+            <li>Publish 6 blog posts</li>
+            <li>2 comparison pages: TradeLyser vs Excel, TradeLyser vs TraderSync</li>
+            <li>Start internal linking</li>
+          </ul>
         </div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn" onclick="window.scrollTo({top:0, behavior:'smooth'})"><i class="fa-solid fa-arrow-up"></i>Back to top</button>
-          <button class="btn primary" onclick="window.print()"><i class="fa-solid fa-print"></i>Print / Save as PDF</button>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-share-nodes"></i>Social Media</h4>
+          <ul class="mini">
+            <li>Instagram + YouTube: 5 reels/week</li>
+            <li>X: 2 posts/day + 1 thread/week</li>
+            <li>Add screen recordings: board, tagging, AI insights</li>
+          </ul>
+          <div class="note">Education first, product second.</div>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-video"></i>Founder Content</h4>
+          <ul class="mini">
+            <li>Weekly Trading Talk: 10 to 15 mins</li>
+            <li>Cut into 5 to 7 shorts</li>
+            <li>Topics: overtrading, emotions, pro reviews, what data reveals</li>
+          </ul>
+          <p style="margin-top:8px;"><strong>Soft CTA</strong>: “If you are serious about improving, tools like TradeLyser exist for this exact reason.”</p>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-bullhorn"></i>Influencers + Ads</h4>
+          <ul class="mini">
+            <li>Outreach 10 micro influencers (10k to 50k)</li>
+            <li>Offer free pro access, early features, revenue share</li>
+            <li>Paid ads: retargeting only, small test budget</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- MONTH 3 -->
+    <section id="m3" class="month">
+      <div class="month-head">
+        <div class="month-left">
+          <div class="month-num">3</div>
+          <div>
+            <h3>Month 3: Activation + Trial Push</h3>
+            <p>Drive trials and broker connections. Stronger product focus with proof-driven stories.</p>
+          </div>
+        </div>
+        <div class="tags">
+          <div class="tag"><i class="fa-solid fa-link"></i>Broker pages</div>
+          <div class="tag"><i class="fa-solid fa-bolt"></i>Cold traffic</div>
+        </div>
+      </div>
+
+      <div class="month-body">
+        <div class="mcard">
+          <h4><i class="fa-solid fa-magnifying-glass"></i>SEO</h4>
+          <ul class="mini">
+            <li>Publish 8 blogs</li>
+            <li>Broker pages: Zerodha, Groww, Angel One</li>
+          </ul>
+          <div class="note">Broker pages convert well because intent is specific.</div>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-share-nodes"></i>Social Mix</h4>
+          <ul class="mini">
+            <li>40% education</li>
+            <li>40% product use cases</li>
+            <li>20% testimonials and stories</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-star"></i>Influencer Demo Campaign</h4>
+          <ul class="mini">
+            <li>1 full demo video</li>
+            <li>2 short clips + 1 story set</li>
+            <li>Message: “This is how I review my trades now.”</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-rectangle-ad"></i>Paid Ads</h4>
+          <ul class="mini">
+            <li>Start cold traffic: Google Search + Meta Reels</li>
+            <li>Keywords: trading journal, options trading journal, trading analytics, zerodha journal</li>
+            <li>Creatives: problem-based, not feature-based</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- MONTH 4 -->
+    <section id="m4" class="month">
+      <div class="month-head">
+        <div class="month-left">
+          <div class="month-num">4</div>
+          <div>
+            <h3>Month 4: Community + Retention</h3>
+            <p>Turn users into loyal users by building discipline habits and visible progress.</p>
+          </div>
+        </div>
+        <div class="tags">
+          <div class="tag"><i class="fa-solid fa-users"></i>Challenge</div>
+          <div class="tag"><i class="fa-solid fa-repeat"></i>Habit loop</div>
+        </div>
+      </div>
+
+      <div class="month-body">
+        <div class="mcard">
+          <h4><i class="fa-solid fa-trophy"></i>Discipline Challenge</h4>
+          <ul class="mini">
+            <li>4-week challenge: journal daily, tag trades, max loss rule</li>
+            <li>Weekly reviews</li>
+            <li>Rewards: free month, feature access, public recognition</li>
+          </ul>
+          <div class="note">Builds habit and identity, drives retention.</div>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-share-nodes"></i>Social Content</h4>
+          <ul class="mini">
+            <li>Challenge updates</li>
+            <li>User progress stories</li>
+            <li>Behind-the-scenes</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-microphone-lines"></i>Podcast</h4>
+          <ul class="mini">
+            <li>User journey reviews</li>
+            <li>Mistakes fixed using discipline</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-file-signature"></i>SEO + Influencers</h4>
+          <ul class="mini">
+            <li>Publish case studies and user stories</li>
+            <li>Get influencers to join the challenge publicly</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- MONTH 5 -->
+    <section id="m5" class="month">
+      <div class="month-head">
+        <div class="month-left">
+          <div class="month-num">5</div>
+          <div>
+            <h3>Month 5: Scale + Partnerships</h3>
+            <p>Lower CAC through partnerships and mentor distribution. Scale only what already works.</p>
+          </div>
+        </div>
+        <div class="tags">
+          <div class="tag"><i class="fa-solid fa-handshake"></i>Partners</div>
+          <div class="tag"><i class="fa-solid fa-chalkboard-user"></i>Mentors</div>
+        </div>
+      </div>
+
+      <div class="month-body">
+        <div class="mcard">
+          <h4><i class="fa-solid fa-building-columns"></i>Broker Partnerships</h4>
+          <ul class="mini">
+            <li>Co-webinars</li>
+            <li>Co-email campaigns</li>
+            <li>In-app placements</li>
+          </ul>
+          <div class="note">Message: “Trade better. Trade disciplined.”</div>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-chalkboard-user"></i>Mentor Program</h4>
+          <ul class="mini">
+            <li>Target 20 mentors</li>
+            <li>Provide mentor dashboard, codes, marketing kit</li>
+            <li>Mentors bring mentees</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-star"></i>Influencers</h4>
+          <ul class="mini">
+            <li>Sign 3 larger creators</li>
+            <li>Long-term contracts</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-rectangle-ad"></i>Paid Ads</h4>
+          <ul class="mini">
+            <li>Increase budget only on winning creatives</li>
+            <li>Kill everything else</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- MONTH 6 -->
+    <section id="m6" class="month">
+      <div class="month-head">
+        <div class="month-left">
+          <div class="month-num">6</div>
+          <div>
+            <h3>Month 6: Brand Authority + PR</h3>
+            <p>Make TradeLyser a category name. Own trading discipline as a conversation in India.</p>
+          </div>
+        </div>
+        <div class="tags">
+          <div class="tag"><i class="fa-solid fa-newspaper"></i>PR</div>
+          <div class="tag"><i class="fa-solid fa-podcast"></i>Podcast</div>
+        </div>
+      </div>
+
+      <div class="month-body">
+        <div class="mcard">
+          <h4><i class="fa-solid fa-newspaper"></i>PR + Media</h4>
+          <ul class="mini">
+            <li>Founder interviews</li>
+            <li>Articles: discipline, AI in trading, Indian trader psychology</li>
+          </ul>
+          <div class="note">Objective: category association with discipline + performance analytics.</div>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-podcast"></i>TradeLyser Podcast</h4>
+          <ul class="mini">
+            <li>Weekly episodes</li>
+            <li>Guests: traders, mentors, psychologists, market experts</li>
+            <li>Repurpose into shorts</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-crown"></i>Authority Outcomes</h4>
+          <ul class="mini">
+            <li>More branded searches</li>
+            <li>Higher trial conversion due to trust</li>
+            <li>Mentor and creator ecosystem becomes a growth engine</li>
+          </ul>
+        </div>
+
+        <div class="mcard">
+          <h4><i class="fa-solid fa-flag-checkered"></i>Category Goal</h4>
+          <p>
+            TradeLyser becomes the default name in the “trading discipline” conversation,
+            driven by proof, community, and repeatable distribution.
+          </p>
         </div>
       </div>
     </section>
 
     <footer>
-      TradeLyser Digital Marketing Plan. Built as an HTML presentation layout.
+      TradeLyser Digital Marketing Plan. Clean HTML + CSS layout for presentation use.
     </footer>
-  </div>
-
-  <script>
-    // Optional: smooth anchor scrolling with header offset
-    (function(){
-      const headerOffset = 76;
-      document.querySelectorAll('a[href^="#"]').forEach(a => {
-        a.addEventListener('click', (e) => {
-          const id = a.getAttribute('href');
-          const el = document.querySelector(id);
-          if(!el) return;
-          e.preventDefault();
-          const y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
-          window.scrollTo({ top: y, behavior: 'smooth' });
-        });
-      });
-    })();
-  </script>
+  </main>
 </body>
 </html>
