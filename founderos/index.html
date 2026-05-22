@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FounderOS — AI Pipeline Core</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React + ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <!-- Babel (JSX transpilation in-browser) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn  { animation: fadeIn  0.25s ease both; }
+    .animate-slideUp { animation: slideUp 0.3s ease both; }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: #090b11; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+    html, body { margin: 0; padding: 0; background: #090b11; }
+
+    /* Range input thumb */
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: #6366f1;
+      cursor: pointer;
+    }
+    input[type=range]::-moz-range-thumb {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: #6366f1;
+      cursor: pointer;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const INITIAL_TASKS = [
+      {
+        id: '1',
+        title: 'Launch beta page for FounderOS',
+        description: 'Finalize the layout styling, add custom interaction triggers, and link up with analytics dashboards.',
+        priority: 'high',
+        status: 'today',
+        is_revenue_generating: true,
+        completed: false,
+        scheduledTime: '10:00 AM',
+        tags: ['SaaS', 'Launch', 'Frontend']
+      },
+      {
+        id: '2',
+        title: 'Send proposal to Acme Corp',
+        description: 'Draft the tiered package proposal for the SaaS licensing. High custom priority onboarding setup.',
+        priority: 'high',
+        status: 'today',
+        is_revenue_generating: true,
+        completed: false,
+        scheduledTime: '11:30 AM',
+        tags: ['Proposals', 'Outreach']
+      },
+      {
+        id: '3',
+        title: 'Follow up on first level meeting with Beta Brand',
+        description: 'Book follow-up meeting and send deck outlining execution indicators.',
+        priority: 'medium',
+        status: 'this_week',
+        is_revenue_generating: false,
+        completed: false,
+        tags: ['Meetings', 'Nurture']
+      },
+      {
+        id: '4',
+        title: 'Refactor state manager logic',
+        description: 'Ensure context-sensitive changes and reduce cumulative layout shifts across tabs.',
+        priority: 'low',
+        status: 'backlog',
+        is_revenue_generating: false,
+        completed: false,
+        tags: ['Tech Debt', 'Optimization']
+      },
+      {
+        id: '5',
+        title: 'Gym workout session',
+        description: 'Active core routines and functional mobility work.',
+        priority: 'medium',
+        status: 'today',
+        is_revenue_generating: false,
+        completed: true,
+        scheduledTime: '6:00 PM',
+        tags: ['Health']
+      }
+    ];
+
+    const INITIAL_HABITS = [
+      { id: 'h1', name: 'Wake up at 5:30 AM', completed: true,  streak: 12 },
+      { id: 'h2', name: '3+ Hours Deep Work',  completed: false, streak: 4  },
+      { id: 'h3', name: 'Workout or Cardio',   completed: true,  streak: 5  },
+      { id: 'h4', name: 'Content post published', completed: false, streak: 1 },
+      { id: 'h5', name: 'Evening AI Reflection',  completed: false, streak: 14 }
+    ];
+
+    const INITIAL_KPIS = [
+      { date: '05-12', clientsSpoken: 4,  meetings: 2, proposals: 1, proposalVal: 5000  },
+      { date: '05-13', clientsSpoken: 6,  meetings: 3, proposals: 2, proposalVal: 12000 },
+      { date: '05-14', clientsSpoken: 3,  meetings: 1, proposals: 1, proposalVal: 4500  },
+      { date: '05-15', clientsSpoken: 9,  meetings: 4, proposals: 3, proposalVal: 22000 },
+      { date: '05-16', clientsSpoken: 5,  meetings: 2, proposals: 2, proposalVal: 9000  },
+      { date: '05-17', clientsSpoken: 8,  meetings: 5, proposals: 3, proposalVal: 18500 },
+      { date: '05-18', clientsSpoken: 11, meetings: 6, proposals: 4, proposalVal: 24000 }
+    ];
+
+    const INSIGHTS = [
+      { type: 'positive',     text: 'You perform best between 8–11 AM. 74% of your first-level meetings are scheduled and won in this window.' },
+      { type: 'warning',      text: 'Proposal conversion rate drops by 32% on days when consecutive screen time goes beyond 6 hours.' },
+      { type: 'correlation',  text: 'Having at least 8 client conversations in a day correlates directly with sending 2.4x more proposals.' },
+      { type: 'burnout',      text: 'High meeting volume days coincide with a 40% reduction in completed deep focus work sessions.' }
+    ];
+
+    const playBeep = (type) => {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc  = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        if (type === 'start') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.1,  ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+        } else if (type === 'complete') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+          osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
+          osc.frequency.setValueAtTime(880,    ctx.currentTime + 0.2);
+          gain.gain.setValueAtTime(0.15, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+        } else if (type === 'inject') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25,  ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(1046.50, ctx.currentTime + 0.2);
+          gain.gain.setValueAtTime(0.12, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        } else {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(330, ctx.currentTime);
+          gain.gain.setValueAtTime(0.1,  ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+        }
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.4);
+      } catch (e) {
+        // audio blocked by browser policy — silently ignore
+      }
+    };
+
+    function App() {
+      const [activeTab, setActiveTab] = useState('dashboard');
+      const [tasks,     setTasks]     = useState(INITIAL_TASKS);
+      const [habits,    setHabits]    = useState(INITIAL_HABITS);
+      const [kpiHistory, setKpiHistory] = useState(INITIAL_KPIS);
+
+      const [toast, setToast] = useState(null);
+
+      const [pipelineMetrics, setPipelineMetrics] = useState({
+        clientsSpoken:      45,
+        firstLevelMeetings: 23,
+        proposalsSent:      15,
+        proposalValue:      72500,
+        totalRevenue:       39200,
+        revenueTarget:      60000
+      });
+
+      const [intention,          setIntention]          = useState('Close proposal for Acme Corp and schedule two outreach demo rounds.');
+      const [tempIntention,      setTempIntention]      = useState(intention);
+      const [isEditingIntention, setIsEditingIntention] = useState(false);
+
+      const [selectedTask,      setSelectedTask]      = useState(null);
+      const [taskSearchQuery,   setTaskSearchQuery]   = useState('');
+      const [taskTagFilter,     setTaskTagFilter]     = useState('');
+      const [modalNewTagText,   setModalNewTagText]   = useState('');
+
+      const [reflection, setReflection] = useState({
+        wins: '', losses: '', energy: 8, mood: 8, isSubmitted: false, aiSummary: '', aiAnalysis: ''
+      });
+
+      const [reflectionsHistory, setReflectionsHistory] = useState([
+        {
+          date: 'May 17, 2026',
+          wins: 'Closed proposals for startup client. Reached 11 client demo milestones.',
+          losses: 'Proposals took longer to format than scheduled.',
+          energy: 7, mood: 9,
+          aiSummary: 'Strong pipeline momentum. Conversational ratios remain high.',
+          aiAnalysis: 'Excellent productivity. Recommended strategy: schedule deep-focus blocks first thing to preserve afternoon focus.'
+        }
+      ]);
+
+      const [timerMode,         setTimerMode]         = useState(25);
+      const [secondsRemaining,  setSecondsRemaining]  = useState(25 * 60);
+      const [timerRunning,      setTimerRunning]       = useState(false);
+      const [timerIntervalId,   setTimerIntervalId]   = useState(null);
+      const [distractions,      setDistractions]      = useState(0);
+      const [completedSessions, setCompletedSessions] = useState(2);
+      const [activeTimerTask,   setActiveTimerTask]   = useState('1');
+
+      const [newTaskTitle,        setNewTaskTitle]        = useState('');
+      const [newTaskDesc,         setNewTaskDesc]         = useState('');
+      const [newTaskPriority,     setNewTaskPriority]     = useState('medium');
+      const [newTaskIsRevenue,    setNewTaskIsRevenue]    = useState(false);
+      const [newTaskScheduledTime,setNewTaskScheduledTime]= useState('');
+      const [newTaskTagsRaw,      setNewTaskTagsRaw]      = useState('');
+
+      const [newHabitName, setNewHabitName] = useState('');
+
+      const [metricLogForm, setMetricLogForm] = useState({
+        clients: '', meetings: '', proposals: '', value: '', revAdd: ''
+      });
+
+      const [chatMessages, setChatMessages] = useState([
+        {
+          id: 'welcome-1',
+          sender: 'ai',
+          text: "Welcome Shyam. I am your FounderOS Co-Pilot. Tell me about client meetings, custom proposals sent, or execution plans. I will dynamically guide you, map deal statistics, and automatically structure and inject tagged tasks directly into your execution board.",
+          timestamp: 'Just now',
+          tasksInjected: []
+        }
+      ]);
+      const [currentMessage, setCurrentMessage] = useState('');
+      const [isChatLoading,  setIsChatLoading]  = useState(false);
+      const messagesEndRef = useRef(null);
+
+      /* ── helpers ── */
+      const showToast = (message, type = 'success') => setToast({ message, type });
+
+      useEffect(() => {
+        if (!toast) return;
+        const t = setTimeout(() => setToast(null), 3500);
+        return () => clearTimeout(t);
+      }, [toast]);
+
+      useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, [chatMessages, isChatLoading]);
+
+      const fetchWithBackoff = async (url, options, retries = 3, delay = 1000) => {
+        try {
+          const res = await fetch(url, options);
+          if (!res.ok) {
+            if (res.status === 429 && retries > 0) {
+              await new Promise(r => setTimeout(r, delay));
+              return fetchWithBackoff(url, options, retries - 1, delay * 2);
+            }
+            throw new Error(`HTTP ${res.status}`);
+          }
+          return res;
+        } catch (err) {
+          if (retries > 0) {
+            await new Promise(r => setTimeout(r, delay));
+            return fetchWithBackoff(url, options, retries - 1, delay * 2);
+          }
+          throw err;
+        }
+      };
+
+      const handleSendMessage = async (e) => {
+        if (e) e.preventDefault();
+        if (!currentMessage.trim() || isChatLoading) return;
+
+        const userText = currentMessage;
+        setCurrentMessage('');
+        setIsChatLoading(true);
+
+        const userMessage = {
+          id: Date.now().toString(),
+          sender: 'user',
+          text: userText,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        setChatMessages(prev => [...prev, userMessage]);
+        playBeep('click');
+
+        try {
+          const apiKey = "";
+          const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+          const systemPrompt = `You are the ultimate strategic executive Co-Pilot for Shyam, a high-performance SaaS Founder.
+Your responsibility is twofold:
+1. Provide a high-caliber, brief, and highly direct response to their updates (clients spoken to, proposals sent, meetings, problems). Max 3 sentences.
+2. Intelligently identify and parse ANY tasks, next steps, or meetings mentioned.
+
+For each task you extract, identify:
+- title: Actionable, concise, clear title.
+- description: Detailed summary or next steps for the task.
+- priority: "high", "medium", or "low".
+- status: "today", "this_week", or "backlog" based on context.
+- is_revenue_generating: true if directly tied to proposal preparation, sales calls, outbound meetings, proposals, or MRR.
+- scheduledTime: Extracted scheduled hour (e.g. "3:00 PM").
+- tags: Array of short string tags matching the context (e.g. ["proposal", "outreach", "tech"]).
+
+You MUST respond strictly with the specified JSON schema structure. No extra text, headers, or markdown formatting outside of raw JSON representation.`;
+
+          const payload = {
+            contents: [{ role: "user", parts: [{ text: userText }] }],
+            generationConfig: {
+              responseMimeType: "application/json",
+              responseSchema: {
+                type: "OBJECT",
+                properties: {
+                  reply: { type: "STRING" },
+                  extractedTasks: {
+                    type: "ARRAY",
+                    items: {
+                      type: "OBJECT",
+                      properties: {
+                        title:                { type: "STRING" },
+                        description:          { type: "STRING", nullable: true },
+                        priority:             { type: "STRING", enum: ["high", "medium", "low"] },
+                        status:               { type: "STRING", enum: ["today", "this_week", "backlog", "done"] },
+                        is_revenue_generating:{ type: "BOOLEAN" },
+                        scheduledTime:        { type: "STRING", nullable: true },
+                        tags:                 { type: "ARRAY", items: { type: "STRING" } }
+                      },
+                      required: ["title", "priority", "status", "is_revenue_generating"]
+                    }
+                  }
+                },
+                required: ["reply", "extractedTasks"]
+              }
+            },
+            systemInstruction: { parts: [{ text: systemPrompt }] }
+          };
+
+          const response = await fetchWithBackoff(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          const result  = await response.json();
+          const rawText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+          if (rawText) {
+            const parsed = JSON.parse(rawText);
+            const newExtractedTasks = [];
+
+            if (parsed.extractedTasks?.length > 0) {
+              parsed.extractedTasks.forEach(item => {
+                const taskObj = {
+                  id: `ai-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+                  title:                 item.title,
+                  description:           item.description || '',
+                  priority:              item.priority || 'medium',
+                  status:                item.status   || 'today',
+                  is_revenue_generating: !!item.is_revenue_generating,
+                  completed:             false,
+                  scheduledTime:         item.scheduledTime || null,
+                  tags:                  item.tags || []
+                };
+                newExtractedTasks.push(taskObj);
+              });
+              setTasks(prev => [...prev, ...newExtractedTasks]);
+              playBeep('inject');
+              showToast(`Successfully scheduled ${newExtractedTasks.length} task(s) from conversation!`, 'info');
+            }
+
+            setChatMessages(prev => [...prev, {
+              id: `ai-${Date.now()}`,
+              sender: 'ai',
+              text: parsed.reply,
+              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              tasksInjected: newExtractedTasks
+            }]);
+          } else {
+            throw new Error("Empty payload");
+          }
+        } catch (err) {
+          console.error(err);
+          setChatMessages(prev => [...prev, {
+            id: `ai-err-${Date.now()}`,
+            sender: 'ai',
+            text: "Apologies, Shyam. My core context limits were interrupted. Tell me again what tasks I should inject into your Pipeline Board.",
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            tasksInjected: []
+          }]);
+        } finally {
+          setIsChatLoading(false);
+        }
+      };
+
+      const calculateFounderScore = () => {
+        let score = 0;
+        if (intention.trim().length > 0) score += 5;
+
+        const completedHabitsCount = habits.filter(h => h.completed).length;
+        score += (completedHabitsCount / habits.length) * 35;
+
+        const todayTasks = tasks.filter(t => t.status === 'today');
+        if (todayTasks.length > 0) {
+          const completedTodayTasks = todayTasks.filter(t => t.completed);
+          score += (completedTodayTasks.length / todayTasks.length) * 20;
+          const revTasks = todayTasks.filter(t => t.is_revenue_generating);
+          if (revTasks.length > 0)
+            score += (revTasks.filter(t => t.completed).length / revTasks.length) * 10;
+        } else {
+          score += 30;
+        }
+
+        score += Math.min(completedSessions * 10, 20);
+        if (reflection.isSubmitted) score += 10;
+        return Math.min(100, Math.round(score));
+      };
+
+      const currentFounderScore = calculateFounderScore();
+
+      useEffect(() => {
+        if (!timerRunning) { if (timerIntervalId) clearInterval(timerIntervalId); return; }
+        const interval = setInterval(() => {
+          setSecondsRemaining(prev => {
+            if (prev <= 1) {
+              clearInterval(interval);
+              setTimerRunning(false);
+              setCompletedSessions(c => c + 1);
+              playBeep('complete');
+              showToast("Deep focus interval complete! 10 points added to Founder Index.", "success");
+              setHabits(ph => ph.map(h => h.id === 'h2' ? { ...h, completed: true } : h));
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+        setTimerIntervalId(interval);
+        return () => clearInterval(interval);
+      }, [timerRunning]);
+
+      const handleStartTimer = () => {
+        if (!timerRunning) { playBeep('start'); showToast("Entering deep focus state. Outbound distractions frozen.", "info"); }
+        setTimerRunning(!timerRunning);
+      };
+      const handleResetTimer = (minutes = timerMode) => { setTimerRunning(false); setSecondsRemaining(minutes * 60); setTimerMode(minutes); };
+      const formatTime = (s) => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+
+      const toggleTaskCompleted = (id) => {
+        setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+        playBeep('click');
+        showToast("Task completion toggled!", "info");
+      };
+
+      const addTask = (e) => {
+        e.preventDefault();
+        if (!newTaskTitle.trim()) { showToast("Please enter a valid task title.", "error"); return; }
+        const parsedTags = (newTaskTagsRaw || '').split(',').map(t => t.trim()).filter(Boolean);
+        setTasks(prev => [...prev, {
+          id: Date.now().toString(),
+          title: newTaskTitle.trim(), description: newTaskDesc.trim(),
+          priority: newTaskPriority, status: 'today',
+          is_revenue_generating: newTaskIsRevenue, completed: false,
+          scheduledTime: newTaskScheduledTime.trim() || null, tags: parsedTags
+        }]);
+        setNewTaskTitle(''); setNewTaskDesc(''); setNewTaskScheduledTime('');
+        setNewTaskIsRevenue(false); setNewTaskTagsRaw('');
+        setTaskSearchQuery(''); setTaskTagFilter('');
+        playBeep('complete');
+        showToast("Task created successfully in Focus Today!", "success");
+      };
+
+      const moveTaskStatus = (id, newStatus) => {
+        setTasks(prev => prev.map(t => t.id === id ? { ...t, status: newStatus } : t));
+        showToast(`Task moved to ${newStatus.replace('_', ' ')}`, "info");
+      };
+
+      const deleteTask = (id) => {
+        setTasks(prev => prev.filter(t => t.id !== id));
+        if (selectedTask?.id === id) setSelectedTask(null);
+        showToast("Task permanently deleted", "warning");
+      };
+
+      const updateTaskField = (id, field, value) => {
+        setTasks(prev => prev.map(t => t.id === id ? { ...t, [field]: value } : t));
+        setSelectedTask(prev => prev?.id === id ? { ...prev, [field]: value } : prev);
+      };
+
+      const handleAddTagToModal = (e) => {
+        e.preventDefault();
+        if (!modalNewTagText.trim() || !selectedTask) return;
+        const cleanTag = modalNewTagText.trim();
+        const currentTags = selectedTask.tags || [];
+        if (!currentTags.includes(cleanTag)) {
+          updateTaskField(selectedTask.id, 'tags', [...currentTags, cleanTag]);
+          showToast(`Added tag #${cleanTag}`, "success");
+        }
+        setModalNewTagText('');
+      };
+
+      const handleRemoveTagFromModal = (tagToRemove) => {
+        if (!selectedTask) return;
+        updateTaskField(selectedTask.id, 'tags', (selectedTask.tags || []).filter(t => t !== tagToRemove));
+        showToast(`Removed tag #${tagToRemove}`, "info");
+      };
+
+      const toggleHabitCompleted = (id) => {
+        setHabits(prev => prev.map(h => h.id === id
+          ? { ...h, completed: !h.completed, streak: !h.completed ? h.streak + 1 : Math.max(0, h.streak - 1) }
+          : h));
+        playBeep('click');
+        showToast("Routine progress saved!", "success");
+      };
+
+      const addHabit = (e) => {
+        e.preventDefault();
+        if (!newHabitName.trim()) return;
+        setHabits(prev => [...prev, { id: Date.now().toString(), name: newHabitName.trim(), completed: false, streak: 0 }]);
+        setNewHabitName('');
+        playBeep('click');
+        showToast("New baseline habit established!", "success");
+      };
+
+      const submitReflection = (e) => {
+        e.preventDefault();
+        if (!reflection.wins.trim() && !reflection.losses.trim()) return;
+        const sentimentWord = reflection.mood > 7 ? 'highly motivated' : reflection.mood > 4 ? 'balanced but focused' : 'fatigued/vulnerable';
+        const dynamicSummary  = `Identified high momentum metrics. Accomplished key proposals with a ${sentimentWord} emotional state.`;
+        const dynamicAnalysis = `Energy logged: ${reflection.energy}/10, Mood: ${reflection.mood}/10. Correlation: High client discussion rate maintains pipeline progression, but watch distraction thresholds during late focus sessions.`;
+        const updated = { ...reflection, isSubmitted: true, aiSummary: dynamicSummary, aiAnalysis: dynamicAnalysis };
+        setReflection(updated);
+        setReflectionsHistory(prev => [{
+          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          wins: reflection.wins, losses: reflection.losses,
+          energy: reflection.energy, mood: reflection.mood,
+          aiSummary: dynamicSummary, aiAnalysis: dynamicAnalysis
+        }, ...prev]);
+        setHabits(ph => ph.map(h => h.id === 'h5' ? { ...h, completed: true } : h));
+        playBeep('complete');
+        showToast("Evening reflection analysis compiled!", "success");
+      };
+
+      const addMetricLogs = (e) => {
+        e.preventDefault();
+        const c = parseInt(metricLogForm.clients)   || 0;
+        const m = parseInt(metricLogForm.meetings)  || 0;
+        const p = parseInt(metricLogForm.proposals) || 0;
+        const v = parseFloat(metricLogForm.value)   || 0;
+        const r = parseFloat(metricLogForm.revAdd)  || 0;
+        setPipelineMetrics(prev => ({
+          ...prev,
+          clientsSpoken:      prev.clientsSpoken + c,
+          firstLevelMeetings: prev.firstLevelMeetings + m,
+          proposalsSent:      prev.proposalsSent + p,
+          proposalValue:      prev.proposalValue + v,
+          totalRevenue:       prev.totalRevenue + r
+        }));
+        const todayStr = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' }).replace('/', '-');
+        setKpiHistory(prev => [...prev.slice(1), { date: todayStr, clientsSpoken: c||4, meetings: m||2, proposals: p||1, proposalVal: v||5000 }]);
+        setMetricLogForm({ clients: '', meetings: '', proposals: '', value: '', revAdd: '' });
+        playBeep('complete');
+        showToast("Pipeline metrics refreshed successfully!", "success");
+      };
+
+      const activeTagsList = Array.from(new Set(tasks.flatMap(t => t.tags || []))).filter(Boolean);
+
+      const filteredTasks = tasks.filter(t => {
+        const matchesSearch = t.title.toLowerCase().includes(taskSearchQuery.toLowerCase()) ||
+                              (t.description || '').toLowerCase().includes(taskSearchQuery.toLowerCase());
+        const matchesTag = !taskTagFilter || (t.tags && t.tags.includes(taskTagFilter));
+        return matchesSearch && matchesTag;
+      });
+
+      /* ─────────── NAV ITEMS ─────────── */
+      const navItems = [
+        { id: 'dashboard', name: 'Dashboard', icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" /></svg> },
+        { id: 'ai-chat',    name: 'AI Co-Pilot Chat',   icon: <div className="relative"><svg className="w-4 h-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg><span className="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full animate-ping"></span></div> },
+        { id: 'timer',      name: 'Deep Work Timer',    icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> },
+        { id: 'tasks',      name: 'Task Board',         icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg> },
+        { id: 'habits',     name: 'Habits & Routine',   icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg> },
+        { id: 'reflection', name: 'AI Reflection',      icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg> },
+        { id: 'kpis',       name: 'Deal Analytics',     icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg> },
+        { id: 'insights',   name: 'AI Insights',        icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg> }
+      ];
+
+      /* ─────────── RENDER ─────────── */
+      return (
+        <div className="min-h-screen bg-[#090b11] text-slate-100 font-sans flex flex-col md:flex-row antialiased select-none">
+
+          {/* SIDEBAR */}
+          <aside className="w-full md:w-64 bg-[#0d0f17] border-b md:border-b-0 md:border-r border-slate-800 flex flex-col justify-between shrink-0">
+            <div>
+              <div className="p-6 flex items-center gap-3 border-b border-slate-900">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-cyan-500 flex items-center justify-center font-black text-slate-950 text-sm shadow-[0_0_15px_rgba(99,102,241,0.5)]">F</div>
+                <div>
+                  <span className="font-extrabold tracking-wider bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">FounderOS</span>
+                  <p className="text-[10px] text-indigo-400 font-semibold tracking-widest uppercase">AI Pipeline Core</p>
+                </div>
+              </div>
+
+              <nav className="p-4 space-y-1.5">
+                {navItems.map(item => (
+                  <button key={item.id} onClick={() => setActiveTab(item.id)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                      activeTab === item.id ? 'bg-slate-800 text-white border-l-2 border-indigo-500 shadow-md' : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900'
+                    }`}>
+                    {item.icon}
+                    <span>{item.name}</span>
+                  </button>
+                ))}
+              </nav>
+            </div>
+
+            <div className="p-4 border-t border-slate-900 bg-slate-950/50">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-slate-800 border-2 border-indigo-500/30 flex items-center justify-center font-bold text-slate-200">SS</div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-200">Shyam Sundar</p>
+                  <p className="text-[10px] text-indigo-400">SaaS Founder Tier</p>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          {/* MAIN */}
+          <main className="flex-1 flex flex-col min-w-0 overflow-y-auto relative">
+
+            {/* HEADER */}
+            <header className="px-6 py-4 bg-[#0d0f17]/85 backdrop-blur-md border-b border-slate-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <span className="text-xl font-extrabold capitalize text-white tracking-tight">
+                  {activeTab === 'kpis' ? 'Deal Analytics' : activeTab === 'ai-chat' ? 'AI Co-Pilot Assistant' : activeTab.replace('-', ' ')}
+                </span>
+                <div className="px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                  Workspace Sync
+                </div>
+              </div>
+
+              <div className="flex-1 max-w-md bg-slate-900/60 border border-slate-800/80 rounded-lg px-4 py-2 flex items-center justify-between gap-4">
+                <div className="truncate">
+                  <span className="text-[10px] text-indigo-400 uppercase font-black tracking-widest block">Primary Executive Focus</span>
+                  {isEditingIntention ? (
+                    <input type="text" value={tempIntention} onChange={e => setTempIntention(e.target.value)}
+                      onBlur={() => { setIntention(tempIntention); setIsEditingIntention(false); playBeep('click'); }}
+                      onKeyDown={e => { if (e.key === 'Enter') { setIntention(tempIntention); setIsEditingIntention(false); playBeep('click'); } }}
+                      autoFocus
+                      className="bg-transparent border-b border-indigo-500 focus:outline-none text-xs text-white w-full py-0.5 font-medium" />
+                  ) : (
+                    <p className="text-xs font-semibold text-slate-200 truncate cursor-pointer hover:underline" onClick={() => setIsEditingIntention(true)}>
+                      {intention || "Define what matters today..."}
+                    </p>
+                  )}
+                </div>
+                <button onClick={() => setIsEditingIntention(!isEditingIntention)} className="p-1 hover:bg-slate-800 rounded transition">
+                  <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                </button>
+              </div>
+            </header>
+
+            {/* CONTENT */}
+            <div className="p-6 space-y-6">
+
+              {/* ── DASHBOARD ── */}
+              {activeTab === 'dashboard' && (
+                <div className="space-y-6 animate-fadeIn">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                    {/* Founder Score */}
+                    <div className="bg-[#0d0f17] border border-slate-800 rounded-xl p-6 flex flex-col justify-between relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-indigo-500/10 to-transparent pointer-events-none rounded-bl-full"></div>
+                      <div>
+                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Founder Index</h3>
+                        <p className="text-[11px] text-slate-500">Execution and routine health metric score</p>
+                      </div>
+                      <div className="my-6 flex items-center justify-around gap-4">
+                        <div className="relative flex items-center justify-center">
+                          <svg className="w-32 h-32 transform -rotate-90">
+                            <circle cx="64" cy="64" r="54" strokeWidth="8" stroke="#1e293b" fill="transparent" />
+                            <circle cx="64" cy="64" r="54" strokeWidth="8" stroke="url(#indigoGrad)" fill="transparent"
+                              strokeDasharray={339.29}
+                              strokeDashoffset={339.29 - (339.29 * currentFounderScore) / 100}
+                              strokeLinecap="round" className="transition-all duration-1000 ease-out" />
+                            <defs>
+                              <linearGradient id="indigoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%"   stopColor="#6366f1" />
+                                <stop offset="100%" stopColor="#22d3ee" />
+                              </linearGradient>
+                            </defs>
+                          </svg>
+                          <div className="absolute flex flex-col items-center">
+                            <span className="text-4xl font-black text-white tracking-tighter">{currentFounderScore}</span>
+                            <span className="text-[10px] text-indigo-400 font-bold tracking-widest uppercase">Index</span>
+                          </div>
+                        </div>
+                        <div className="space-y-2 text-xs text-slate-300">
+                          {[['bg-indigo-500','Routines: +35pts'],['bg-cyan-400','Execution: +30pts'],['bg-violet-600','Deep Focus: +20pts'],['bg-emerald-500','Reflection: +10pts']].map(([bg,label]) => (
+                            <div key={label} className="flex items-center gap-2"><span className={`w-2.5 h-2.5 rounded-sm ${bg} block`}></span><span>{label}</span></div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="border-t border-slate-800/80 pt-4 flex items-center justify-between text-xs">
+                        <span className="text-slate-400">Weekly Performance Mean:</span>
+                        <span className="font-bold text-white px-2 py-0.5 bg-slate-900 rounded border border-slate-800">84 / 100</span>
+                      </div>
+                    </div>
+
+                    {/* Pipeline Revenue */}
+                    <div className="bg-[#0d0f17] border border-slate-800 rounded-xl p-6 flex flex-col justify-between">
+                      <div>
+                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Proposal Pipeline</h3>
+                        <p className="text-[11px] text-slate-500">Pipeline generation vs target parameters</p>
+                      </div>
+                      <div className="my-4 space-y-3">
+                        <div className="flex justify-between items-baseline">
+                          <span className="text-3xl font-black text-slate-100">${pipelineMetrics.totalRevenue.toLocaleString()}</span>
+                          <span className="text-xs text-slate-400">Target: ${pipelineMetrics.revenueTarget.toLocaleString()}</span>
+                        </div>
+                        <div className="w-full bg-slate-950 rounded-full h-3 overflow-hidden border border-slate-800">
+                          <div className="bg-gradient-to-r from-indigo-500 to-emerald-400 h-full rounded-full transition-all duration-1000"
+                            style={{ width: `${Math.min(100,(pipelineMetrics.totalRevenue/pipelineMetrics.revenueTarget)*100)}%` }}></div>
+                        </div>
+                        <div className="flex justify-between text-[11px] font-semibold">
+                          <span className="text-emerald-400">{Math.round((pipelineMetrics.totalRevenue/pipelineMetrics.revenueTarget)*100)}% Won</span>
+                          <span className="text-indigo-400">${pipelineMetrics.proposalValue.toLocaleString()} in pipeline</span>
+                        </div>
+                      </div>
+                      <div className="border-t border-slate-800/80 pt-4 flex justify-between text-xs text-slate-400">
+                        <span>Outstanding Proposals:</span>
+                        <span className="font-bold text-indigo-300">{pipelineMetrics.proposalsSent} active</span>
+                      </div>
+                    </div>
+
+                    {/* Outbound Metrics */}
+                    <div className="bg-[#0d0f17] border border-slate-800 rounded-xl p-6 flex flex-col justify-between">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Outbound Metrics</h3>
+                          <p className="text-[11px] text-slate-500">Core outreach triggers</p>
+                        </div>
+                        <button onClick={() => setActiveTab('kpis')} className="text-indigo-400 hover:text-indigo-300 text-xs font-semibold">Log metrics</button>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4 my-2">
+                        {[
+                          ['Clients Spoken With', pipelineMetrics.clientsSpoken, 'text-slate-100'],
+                          ['1st Level Meetings',  pipelineMetrics.firstLevelMeetings, 'text-indigo-400'],
+                          ['Proposals Out',       pipelineMetrics.proposalsSent, 'text-cyan-400'],
+                          ['Proposal Value',      `$${(pipelineMetrics.proposalValue/1000).toFixed(1)}k`, 'text-emerald-400']
+                        ].map(([label, val, cls]) => (
+                          <div key={label} className="bg-slate-900/50 border border-slate-800/80 rounded-lg p-3">
+                            <span className="text-[10px] text-slate-500 block">{label}</span>
+                            <span className={`text-xl font-bold ${cls}`}>{val}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="border-t border-slate-800/80 pt-2 flex justify-between text-xs text-slate-400">
+                        <span>Conversion Rate:</span>
+                        <span className="font-bold text-emerald-400">{Math.round((pipelineMetrics.proposalsSent/(pipelineMetrics.clientsSpoken||1))*100)}%</span>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* Focus + Habits */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="bg-[#0d0f17] border border-slate-800 rounded-xl p-6">
+                      <div className="flex justify-between items-center mb-4">
+                        <div><h4 className="font-bold text-white text-base">Primary Tasks Today</h4><p className="text-xs text-slate-500">Scheduled execution priorities</p></div>
+                        <button onClick={() => setActiveTab('tasks')} className="text-xs text-indigo-400 hover:underline font-semibold">Open Task Board</button>
+                      </div>
+                      <div className="space-y-2.5">
+                        {tasks.filter(t => t.status === 'today').length === 0
+                          ? <p className="text-sm text-slate-500 py-6 text-center">No tasks scheduled for today.</p>
+                          : tasks.filter(t => t.status === 'today').map(task => (
+                            <div key={task.id} className={`flex items-center justify-between p-3 rounded-lg border transition ${task.completed ? 'bg-slate-900/30 border-slate-800/40 opacity-60' : 'bg-slate-900/60 border-slate-800 hover:border-slate-700/80'}`}>
+                              <div className="flex items-center gap-3 max-w-xs sm:max-w-md">
+                                <input type="checkbox" checked={task.completed} onChange={() => toggleTaskCompleted(task.id)}
+                                  className="w-4 h-4 rounded border-slate-700 text-indigo-600 focus:ring-indigo-500 bg-slate-950 cursor-pointer" />
+                                <div className="truncate cursor-pointer" onClick={() => setSelectedTask(task)}>
+                                  <span className={`text-sm font-medium hover:text-indigo-400 transition ${task.completed ? 'line-through text-slate-500' : 'text-slate-200'}`}>{task.title}</span>
+                                  <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
+                                    {task.scheduledTime && <span className="px-1.5 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/20 text-[9px] text-cyan-300 font-bold">⏰ {task.scheduledTime}</span>}
+                                    {task.is_revenue_generating && <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-[9px] text-emerald-400 font-bold uppercase tracking-wider">$$ Revenue</span>}
+                                    {(task.tags||[]).slice(0,2).map((tg,i) => <span key={i} className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700/50 text-[9px]">#{tg}</span>)}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))
+                        }
+                      </div>
+                    </div>
+
+                    <div className="bg-[#0d0f17] border border-slate-800 rounded-xl p-6">
+                      <div className="flex justify-between items-center mb-4">
+                        <div><h4 className="font-bold text-white text-base">Routines & Habits</h4><p className="text-xs text-slate-500">Build executive momentum through routine stability</p></div>
+                        <button onClick={() => setActiveTab('habits')} className="text-xs text-indigo-400 hover:underline font-semibold">Edit Habits</button>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {habits.map(habit => (
+                          <div key={habit.id} onClick={() => toggleHabitCompleted(habit.id)}
+                            className={`p-3 rounded-lg border flex items-center justify-between cursor-pointer transition ${habit.completed ? 'bg-indigo-950/20 border-indigo-500/30 text-indigo-200' : 'bg-slate-900/60 border-slate-800 hover:border-slate-700/80'}`}>
+                            <div className="flex items-center gap-3">
+                              <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${habit.completed ? 'bg-indigo-500 border-indigo-400 text-slate-950' : 'border-slate-700 bg-slate-950'}`}>
+                                {habit.completed && <svg className="w-3.5 h-3.5 stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>}
+                              </div>
+                              <div><p className="text-xs font-semibold">{habit.name}</p><p className="text-[10px] text-slate-500">{habit.streak} day streak</p></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Spotlight + Journal */}
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="lg:col-span-2 bg-gradient-to-r from-[#0d0f17] to-indigo-950/20 border border-slate-800 rounded-xl p-6 relative overflow-hidden">
+                      <div className="absolute -top-10 -right-10 w-40 h-40 bg-indigo-500/5 blur-3xl rounded-full pointer-events-none"></div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="p-1 rounded bg-indigo-500/15 border border-indigo-500/20 text-indigo-400"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg></span>
+                        <span className="text-[10px] uppercase font-black tracking-widest text-indigo-400">AI Spot Insight</span>
+                      </div>
+                      <h3 className="text-base font-bold text-white mb-2">Deal Pipeline Optimization Recommendation</h3>
+                      <p className="text-xs text-slate-300 leading-relaxed max-w-xl">"When Deep Work session volume is focused on Acme proposal drafts between 8:00 AM and 11:00 AM, your proposal conversion efficiency rises by 41%. Block secondary Slack channels during this early execution loop."</p>
+                      <div className="mt-4 flex gap-4">
+                        <div className="px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-[11px] text-slate-400">Target Area: <strong className="text-indigo-300">Proposal Value Velocity</strong></div>
+                        <button onClick={() => setActiveTab('insights')} className="text-xs text-indigo-400 font-bold hover:underline self-center">View AI Predictions →</button>
+                      </div>
+                    </div>
+
+                    <div className="bg-[#0d0f17] border border-slate-800 rounded-xl p-6 flex flex-col justify-between">
+                      <div>
+                        <span className="text-[10px] text-slate-500 uppercase font-black tracking-wider block">Evening Advisor</span>
+                        <h4 className="font-bold text-white text-base">Accountability Log</h4>
+                      </div>
+                      <p className="text-xs text-slate-400 italic my-3">
+                        {reflection.isSubmitted ? `"${reflection.aiSummary.substring(0,85)}..."` : "Document client deal progression, operational barriers, and focus levels to maintain executive index consistency."}
+                      </p>
+                      <div>
+                        {reflection.isSubmitted
+                          ? <div className="px-3 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-[10px] text-emerald-400 flex items-center gap-2"><svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg><span>Logged with Core AI Brain</span></div>
+                          : <button onClick={() => setActiveTab('reflection')} className="w-full py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-lg text-xs font-semibold text-slate-200">Start Daily Reflection</button>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ── AI CHAT ── */}
+              {activeTab === 'ai-chat' && (
+                <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fadeIn">
+                  <div className="lg:col-span-2 bg-[#0d0f17] border border-slate-800 rounded-xl flex flex-col h-[600px] overflow-hidden relative">
+                    <div className="p-4 border-b border-slate-800/80 bg-slate-900/40 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="relative flex h-2.5 w-2.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500"></span></span>
+                        <div><h3 className="text-sm font-bold text-white">FounderOS Cognitive Assistant</h3><p className="text-[10px] text-slate-400">Gemini 2.0 Flash · Auto-Scheduling</p></div>
+                      </div>
+                      <div className="text-[10px] font-mono text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded border border-cyan-400/20 uppercase tracking-widest font-bold">Inject Enabled</div>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-950/20">
+                      {chatMessages.map(msg => (
+                        <div key={msg.id} className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
+                          <div className={`max-w-[85%] rounded-xl p-3.5 text-xs ${msg.sender === 'user' ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-slate-900 border border-slate-800 text-slate-200 rounded-bl-none'}`}>
+                            <p className="leading-relaxed whitespace-pre-wrap">{msg.text}</p>
+                            {msg.tasksInjected && msg.tasksInjected.length > 0 && (
+                              <div className="mt-3 pt-3 border-t border-slate-800 space-y-2">
+                                <span className="text-[9px] text-cyan-400 font-extrabold uppercase tracking-wider block">🤖 Auto-Scheduled Pipeline Injections:</span>
+                                {msg.tasksInjected.map(task => (
+                                  <div key={task.id} className="p-2.5 bg-slate-950 border border-slate-800 rounded flex items-center justify-between text-[11px] hover:border-indigo-500/40 cursor-pointer transition" onClick={() => setSelectedTask(task)}>
+                                    <div className="truncate pr-2">
+                                      <span className="font-semibold text-slate-300 block truncate">{task.title}</span>
+                                      <div className="flex flex-wrap gap-1 mt-1">
+                                        <span className={`px-1 rounded text-[8px] font-bold uppercase ${task.priority === 'high' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-slate-900 text-slate-400'}`}>{task.priority}</span>
+                                        {task.scheduledTime && <span className="px-1 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 text-[8px] font-bold">⏰ {task.scheduledTime}</span>}
+                                        {task.is_revenue_generating && <span className="px-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[8px] font-extrabold uppercase">$$ Rev</span>}
+                                        {(task.tags||[]).map((t,i) => <span key={i} className="px-1 rounded bg-slate-900 text-slate-400 text-[8px]">#{t}</span>)}
+                                      </div>
+                                    </div>
+                                    <span className="text-[9px] text-indigo-400 font-semibold italic bg-slate-900 px-1.5 py-0.5 rounded capitalize">View Details</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          <span className="text-[9px] text-slate-600 mt-1 px-1">{msg.timestamp}</span>
+                        </div>
+                      ))}
+                      {isChatLoading && (
+                        <div className="flex flex-col items-start">
+                          <div className="bg-slate-900 border border-slate-800 rounded-xl rounded-bl-none p-3.5 text-xs text-slate-400 flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce"></span>
+                            <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style={{animationDelay:'0.1s'}}></span>
+                            <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style={{animationDelay:'0.2s'}}></span>
+                            <span className="italic">Parsing pipeline actions...</span>
+                          </div>
+                        </div>
+                      )}
+                      <div ref={messagesEndRef} />
+                    </div>
+
+                    <form onSubmit={handleSendMessage} className="p-3 border-t border-slate-800/80 bg-slate-900/20 flex gap-2">
+                      <input type="text" value={currentMessage} onChange={e => setCurrentMessage(e.target.value)}
+                        placeholder="E.g. I spoke with Acme Corp, send proposal at 4:30 PM, tags: proposals, outreach..."
+                        className="flex-1 bg-slate-950 border border-slate-800 focus:outline-none focus:border-indigo-500 rounded-lg px-3.5 py-2.5 text-xs text-slate-200 placeholder-slate-600"
+                        disabled={isChatLoading} />
+                      <button type="submit" disabled={isChatLoading || !currentMessage.trim()}
+                        className="px-4 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white rounded-lg flex items-center justify-center transition">
+                        <svg className="w-4 h-4 transform rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                      </button>
+                    </form>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div className="bg-[#0d0f17] border border-slate-800 rounded-xl p-5 space-y-4">
+                      <div><span className="text-[10px] text-indigo-400 uppercase font-black tracking-widest block">Smart Extraction Engine</span><h4 className="font-bold text-white text-sm">Automated Scheduling</h4></div>
+                      <p className="text-xs text-slate-400 leading-relaxed">Talk naturally about your day's work. The model identifies tasks, extracts execution hours, tags them, and updates your Pipeline Board in real-time.</p>
+                      <div className="space-y-2 border-t border-slate-900 pt-3">
+                        {[
+                          ['"Schedule a client chat..."','Places into Today, This Week, or Backlog'],
+                          ['"Set time to 3:00 PM..."','Extracts scheduling metadata automatically'],
+                          ['"Add tags SaaS, outbound..."','Applies custom tag arrays for filtering']
+                        ].map(([title, desc]) => (
+                          <div key={title} className="p-2 bg-slate-950 border border-slate-800 rounded">
+                            <p className="text-[11px] font-bold text-slate-300">{title}</p>
+                            <p className="text-[10px] text-slate-500 italic mt-0.5">{desc}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-[#0d0f17] border border-slate-800 rounded-xl p-5 space-y-3">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">One-Tap Prompt Ideas</span>
+                      {[
+                        "Schedule a first level meeting with Beta Brand tomorrow at 1:00 PM with tags meetings, launch",
+                        "I spoke with two clients and need to write proposal value breakdowns in backlog with tags proposals",
+                        "Need to review proposals sent list today at 3:00 PM, high priority and revenue generating",
+                        "Prepare proposals for dynamic partner sync tomorrow morning"
+                      ].map((phrase, idx) => (
+                        <button key={idx} onClick={() => setCurrentMessage(phrase)}
+                          className="w-full text-left p-2.5 bg-slate-950 border border-slate-800 hover:border-indigo-500/50 rounded-lg text-xs text-slate-300 hover:text-white transition duration-150 block truncate">
+                          → {phrase}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ── TIMER ── */}
+              {activeTab === 'timer' && (
+                <div className="max-w-2xl mx-auto space-y-6 animate-fadeIn">
+                  <div className="bg-[#0d0f17] border border-slate-800 rounded-xl p-8 text-center relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 to-cyan-500"></div>
+                    <div className="max-w-md mx-auto space-y-6">
+                      <div><h3 className="text-lg font-bold text-white uppercase tracking-wider">Deep Focus Workspace</h3><p className="text-xs text-slate-500">Isolate distractions and maximize outbound pipeline value</p></div>
+
+                      <div className="flex justify-center gap-2 p-1.5 bg-slate-950 border border-slate-800 rounded-xl">
+                        {[25,50,90].map(mins => (
+                          <button key={mins} onClick={() => handleResetTimer(mins)}
+                            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${timerMode === mins ? 'bg-slate-800 text-indigo-400 border border-slate-700' : 'text-slate-400 hover:text-slate-100'}`}>
+                            {mins} Min Block
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="relative py-8 flex justify-center">
+                        <div className="w-64 h-64 rounded-full border-4 border-slate-800/80 flex flex-col items-center justify-center bg-slate-900/40 shadow-inner">
+                          <span className="text-6xl font-mono font-black text-white tracking-widest leading-none">{formatTime(secondsRemaining)}</span>
+                          <span className="text-[10px] text-indigo-400 font-bold tracking-widest uppercase mt-3">{timerRunning ? 'ACTIVE FLOW STATE' : 'PAUSED ENGINE'}</span>
+                        </div>
+                      </div>
+
+                      <div className="text-left bg-slate-950 border border-slate-800/80 rounded-lg p-3">
+                        <span className="text-[10px] text-indigo-400 uppercase font-bold tracking-wider block mb-1">Affiliated Workspace Task</span>
+                        <select value={activeTimerTask} onChange={e => setActiveTimerTask(e.target.value)}
+                          className="bg-transparent text-indigo-300 text-xs font-medium w-full focus:outline-none border-none py-1">
+                          {tasks.filter(t => t.status === 'today').map(t => (
+                            <option key={t.id} value={t.id} className="bg-[#090b11] text-slate-300">{t.title}{t.is_revenue_generating ? ' ($ Rev)' : ''}</option>
+                          ))}
+                          <option value="none" className="bg-[#090b11] text-slate-300">No specific task</option>
+                        </select>
+                      </div>
+
+                      <div className="flex gap-4">
+                        <button onClick={handleStartTimer}
+                          className={`flex-1 py-3.5 rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition shadow-lg ${timerRunning ? 'bg-amber-600/20 text-amber-300 hover:bg-amber-600/35 border border-amber-700/50' : 'bg-indigo-600 text-white hover:bg-indigo-500'}`}>
+                          {timerRunning ? 'Freeze Flow' : 'Enter Flow State'}
+                        </button>
+                        <button onClick={() => handleResetTimer()} className="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm font-semibold border border-slate-700/50">Reset</button>
+                      </div>
+
+                      <div className="pt-4 border-t border-slate-900 flex justify-between items-center text-xs">
+                        <div className="flex items-center gap-2 text-slate-400"><span>Log Distractions:</span><span className="font-bold text-amber-500">x{distractions}</span></div>
+                        <button onClick={() => { setDistractions(d => d+1); playBeep('click'); }}
+                          className="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:border-slate-700 text-[10px] rounded font-bold uppercase text-amber-400 tracking-wider transition">
+                          + Log Distraction
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ── TASKS ── */}
+              {activeTab === 'tasks' && (
+                <div className="space-y-6 animate-fadeIn">
+                  <div className="bg-[#0d0f17] border border-slate-800 p-5 rounded-xl space-y-4">
+                    <div className="flex flex-col md:flex-row gap-4 items-center justify-between border-b border-slate-800 pb-4">
+                      <div><h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider">Outbound Tasks Board</h3><p className="text-xs text-slate-500">Log outreach progression, proposals, and pipeline meetings</p></div>
+                      <input type="text" placeholder="Search tasks..." value={taskSearchQuery} onChange={e => setTaskSearchQuery(e.target.value)}
+                        className="w-full md:w-64 bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500" />
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 items-center text-xs">
+                      <span className="text-slate-500 font-bold uppercase tracking-widest text-[9px]">Filter Tags:</span>
+                      <button onClick={() => setTaskTagFilter('')}
+                        className={`px-2.5 py-1 rounded-full border text-[11px] font-medium transition ${!taskTagFilter ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300' : 'bg-slate-950 border-slate-800 hover:border-slate-700 text-slate-400'}`}>
+                        All Tasks
+                      </button>
+                      {activeTagsList.map(tag => (
+                        <button key={tag} onClick={() => setTaskTagFilter(taskTagFilter === tag ? '' : tag)}
+                          className={`px-2.5 py-1 rounded-full border text-[11px] font-medium transition ${taskTagFilter === tag ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300' : 'bg-slate-950 border-slate-800 hover:border-slate-700 text-slate-400'}`}>
+                          #{tag}
+                        </button>
+                      ))}
+                    </div>
+
+                    {(taskSearchQuery || taskTagFilter) && (
+                      <div className="p-2.5 bg-indigo-950/20 border border-indigo-500/20 rounded-lg flex items-center justify-between text-xs text-indigo-300">
+                        <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-ping"></span>Showing {filteredTasks.length} of {tasks.length} tasks.</span>
+                        <button onClick={() => { setTaskSearchQuery(''); setTaskTagFilter(''); }} className="px-2 py-0.5 rounded bg-indigo-500 text-slate-950 font-bold hover:bg-indigo-400 transition text-[10px]">Clear</button>
+                      </div>
+                    )}
+                  </div>
+
+                  <form onSubmit={addTask} className="bg-[#0d0f17] border border-slate-800 p-4 rounded-xl flex flex-col md:flex-row gap-4 items-end">
+                    <div className="flex-1 space-y-1.5 w-full">
+                      <label className="text-[10px] text-slate-400 uppercase font-black tracking-widest block">Task Title</label>
+                      <input type="text" value={newTaskTitle} onChange={e => setNewTaskTitle(e.target.value)} placeholder="e.g. Schedule first level meeting..."
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition" />
+                    </div>
+                    <div className="space-y-1.5 shrink-0 w-full md:w-32">
+                      <label className="text-[10px] text-slate-400 uppercase font-black tracking-widest block">Time</label>
+                      <input type="text" value={newTaskScheduledTime} onChange={e => setNewTaskScheduledTime(e.target.value)} placeholder="3:00 PM"
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 transition" />
+                    </div>
+                    <div className="space-y-1.5 shrink-0 w-full md:w-44">
+                      <label className="text-[10px] text-slate-400 uppercase font-black tracking-widest block">Tags (comma-sep.)</label>
+                      <input type="text" value={newTaskTagsRaw} onChange={e => setNewTaskTagsRaw(e.target.value)} placeholder="proposals, launch"
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 transition" />
+                    </div>
+                    <div className="space-y-1.5 shrink-0 w-full md:w-36">
+                      <label className="text-[10px] text-slate-400 uppercase font-black tracking-widest block">Priority</label>
+                      <select value={newTaskPriority} onChange={e => setNewTaskPriority(e.target.value)}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-xs text-slate-300 focus:outline-none cursor-pointer">
+                        <option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option>
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-2 h-10 shrink-0 bg-slate-950 border border-slate-800 rounded-lg px-4 w-full md:w-auto">
+                      <input type="checkbox" id="rev-gen" checked={newTaskIsRevenue} onChange={e => setNewTaskIsRevenue(e.target.checked)}
+                        className="w-3.5 h-3.5 text-indigo-600 focus:ring-indigo-500 bg-slate-900 rounded cursor-pointer" />
+                      <label htmlFor="rev-gen" className="text-xs font-semibold text-slate-300 cursor-pointer whitespace-nowrap">Revenue Generating</label>
+                    </div>
+                    <button type="submit" className="px-6 py-2.5 w-full md:w-auto bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg transition shrink-0 shadow-md">Add Task</button>
+                  </form>
+
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    {[
+                      { id: 'backlog',   title: 'Task Backlog' },
+                      { id: 'this_week', title: 'This Week' },
+                      { id: 'today',     title: 'Scheduled (Today)' },
+                      { id: 'done',      title: 'Fully Executed' }
+                    ].map(stage => {
+                      const stageTasks = filteredTasks.filter(t => t.status === stage.id);
+                      return (
+                        <div key={stage.id} className="bg-[#0d0f17] border border-slate-800/80 rounded-xl p-4 flex flex-col min-h-[400px]">
+                          <div className="flex items-center justify-between border-b border-slate-900 pb-3 mb-3">
+                            <h4 className="font-bold text-slate-200 text-xs tracking-wide uppercase flex items-center gap-2">
+                              <span className={`w-1.5 h-1.5 rounded-full ${stage.id === 'done' ? 'bg-emerald-400' : stage.id === 'today' ? 'bg-indigo-500' : 'bg-slate-500'}`}></span>
+                              {stage.title}
+                            </h4>
+                            <span className="text-[10px] font-bold text-slate-500 bg-slate-900 px-2 py-0.5 rounded-full border border-slate-800">{stageTasks.length}</span>
+                          </div>
+
+                          <div className="space-y-2.5 flex-1">
+                            {stageTasks.length === 0
+                              ? <p className="text-[11px] text-slate-600 italic py-6 text-center">Empty Stage</p>
+                              : stageTasks.map(task => (
+                                <div key={task.id} className="p-3 bg-slate-950/80 border border-slate-800/80 rounded-lg hover:border-slate-700/80 transition flex flex-col gap-3 group animate-fadeIn">
+                                  <div className="cursor-pointer" onClick={() => setSelectedTask(task)}>
+                                    <span className={`text-xs font-semibold leading-relaxed group-hover:text-indigo-400 transition ${task.completed ? 'line-through text-slate-500' : 'text-slate-200'}`}>{task.title}</span>
+                                    {task.description && <p className="text-[10px] text-slate-500 truncate mt-1">{task.description}</p>}
+                                    <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                                      {task.scheduledTime && <span className="px-1.5 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/20 text-[9px] text-cyan-300 font-extrabold">⏰ {task.scheduledTime}</span>}
+                                      {task.is_revenue_generating && <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-[9px] text-emerald-400 font-bold uppercase tracking-wider">$$ Rev</span>}
+                                      <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${task.priority === 'high' ? 'bg-red-500/10 border border-red-500/20 text-red-400' : 'bg-slate-900 text-slate-400'}`}>{task.priority}</span>
+                                    </div>
+                                    {task.tags && task.tags.length > 0 && (
+                                      <div className="flex flex-wrap gap-1 mt-2">
+                                        {task.tags.map((tg,i) => <span key={i} className="text-[9px] text-indigo-400 bg-slate-900 border border-slate-800/60 px-1.5 py-0.5 rounded">#{tg}</span>)}
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  <div className="border-t border-slate-900/80 pt-2.5 flex items-center justify-between gap-1">
+                                    {stage.id !== 'done'
+                                      ? <button onClick={() => toggleTaskCompleted(task.id)} className="text-[10px] font-bold text-indigo-400 hover:text-indigo-300">{task.completed ? 'Mark Open' : 'Done'}</button>
+                                      : <span className="text-[10px] text-emerald-500 font-bold">Cleared</span>
+                                    }
+                                    <div className="flex items-center gap-1">
+                                      <button onClick={() => deleteTask(task.id)} className="p-1 hover:text-red-400 text-slate-600 transition" title="Delete">
+                                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                      </button>
+                                      <select value={task.status} onChange={e => moveTaskStatus(task.id, e.target.value)}
+                                        className="bg-slate-900 border border-slate-800 text-[10px] text-slate-400 rounded p-1 cursor-pointer focus:outline-none">
+                                        <option value="backlog">Backlog</option><option value="this_week">This Wk</option><option value="today">Today</option><option value="done">Done</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))
+                            }
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* ── HABITS ── */}
+              {activeTab === 'habits' && (
+                <div className="space-y-6 animate-fadeIn">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="bg-[#0d0f17] border border-slate-800 rounded-xl p-6">
+                      <h3 className="font-bold text-white text-sm uppercase tracking-wider mb-4">Add Habit</h3>
+                      <form onSubmit={addHabit} className="space-y-4">
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] text-slate-400 uppercase font-black tracking-widest block">Habit Title</label>
+                          <input type="text" value={newHabitName} onChange={e => setNewHabitName(e.target.value)} placeholder="e.g. Publish proposal breakdowns..."
+                            className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500" />
+                        </div>
+                        <button type="submit" className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg transition shadow">Establish Routine Habit</button>
+                      </form>
+                    </div>
+
+                    <div className="lg:col-span-2 bg-[#0d0f17] border border-slate-800 rounded-xl p-6 space-y-6">
+                      <div><h3 className="font-bold text-white text-base">Continuous Streak Engine</h3><p className="text-xs text-slate-500">Log consistency over execution periods</p></div>
+                      <div className="space-y-3">
+                        {habits.map(habit => (
+                          <div key={habit.id} className="p-4 bg-slate-950 border border-slate-800/80 rounded-xl flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              <button onClick={() => toggleHabitCompleted(habit.id)}
+                                className={`w-7 h-7 rounded-lg border flex items-center justify-center transition ${habit.completed ? 'bg-indigo-500 border-indigo-400 text-slate-950 shadow-md shadow-indigo-500/20' : 'border-slate-800 bg-slate-900 hover:border-slate-700'}`}>
+                                <svg className="w-4 h-4 stroke-[3.5]" fill="none" viewBox="0 0 24 24" stroke={habit.completed ? 'currentColor' : 'transparent'}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
+                              </button>
+                              <div>
+                                <p className={`text-sm font-semibold ${habit.completed ? 'text-indigo-200' : 'text-slate-200'}`}>{habit.name}</p>
+                                <p className="text-[10px] text-slate-500 mt-0.5">Streak: <strong className="text-indigo-400">{habit.streak} days</strong></p>
+                              </div>
+                            </div>
+                            <div className="flex gap-1">
+                              {[...Array(5)].map((_,i) => (
+                                <span key={i} className={`w-4 h-4 rounded-sm ${i === 4 && habit.completed ? 'bg-indigo-500' : i < 4 ? 'bg-indigo-500/40' : 'bg-slate-900 border border-slate-800'}`}></span>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ── REFLECTION ── */}
+              {activeTab === 'reflection' && (
+                <div className="max-w-3xl mx-auto space-y-6 animate-fadeIn">
+                  <div className="bg-[#0d0f17] border border-slate-800 rounded-xl p-6 md:p-8 space-y-6">
+                    <div><h3 className="text-base font-extrabold text-white">Daily Cognitive Integration</h3><p className="text-xs text-slate-500">Log bottlenecks, client reactions, and physical states</p></div>
+
+                    {reflection.isSubmitted ? (
+                      <div className="space-y-6 animate-slideUp">
+                        <div className="bg-emerald-500/10 border border-emerald-500/20 p-5 rounded-xl space-y-2">
+                          <div className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span><span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">AI Executive Synthesis Completed</span></div>
+                          <p className="text-sm font-semibold text-slate-200">"{reflection.aiSummary}"</p>
+                        </div>
+                        <div className="bg-indigo-950/10 border border-slate-800 p-6 rounded-xl space-y-3">
+                          <h4 className="font-extrabold text-xs text-indigo-400 uppercase tracking-widest">Co-Pilot Reflection Matrix Output</h4>
+                          <p className="text-xs text-slate-300 leading-relaxed">{reflection.aiAnalysis}</p>
+                        </div>
+                        <div className="flex justify-between items-center text-xs pt-4 border-t border-slate-900">
+                          <div className="flex gap-4">
+                            <span>Energy: <strong className="text-indigo-400">{reflection.energy}/10</strong></span>
+                            <span>Mood: <strong className="text-cyan-400">{reflection.mood}/10</strong></span>
+                          </div>
+                          <button onClick={() => { setReflection(prev => ({ ...prev, isSubmitted: false, wins: '', losses: '' })); playBeep('click'); }}
+                            className="text-xs text-indigo-400 hover:underline">Reset / Enter New Session</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <form onSubmit={submitReflection} className="space-y-6">
+                        <div className="space-y-2">
+                          <label className="text-xs font-bold text-slate-300">1. What were today's core strategic pipeline wins?</label>
+                          <textarea value={reflection.wins} onChange={e => setReflection(prev => ({ ...prev, wins: e.target.value }))} rows="3"
+                            placeholder="e.g. Sent out Acme proposals with a value index of 15k..."
+                            className="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-slate-200 focus:outline-none focus:border-indigo-500" required />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-xs font-bold text-slate-300">2. Where did outreach or execution stagger?</label>
+                          <textarea value={reflection.losses} onChange={e => setReflection(prev => ({ ...prev, losses: e.target.value }))} rows="3"
+                            placeholder="e.g. Long focus gaps preparing structural proposals..."
+                            className="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-slate-200 focus:outline-none focus:border-indigo-500" required />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-2">
+                          {[
+                            { label: 'Physical Energy Score', key: 'energy', color: 'text-indigo-400', accent: 'accent-indigo-500' },
+                            { label: 'Mood / Stress Level',   key: 'mood',   color: 'text-cyan-400',   accent: 'accent-cyan-400' }
+                          ].map(({ label, key, color, accent }) => (
+                            <div key={key} className="space-y-2">
+                              <div className="flex justify-between text-xs font-bold text-slate-300">
+                                <span>{label}</span><span className={color}>{reflection[key]} / 10</span>
+                              </div>
+                              <input type="range" min="1" max="10" value={reflection[key]}
+                                onChange={e => setReflection(prev => ({ ...prev, [key]: parseInt(e.target.value) }))}
+                                className={`w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer ${accent}`} />
+                            </div>
+                          ))}
+                        </div>
+                        <div className="flex items-center justify-between pt-4 border-t border-slate-900">
+                          <span className="text-[10px] text-slate-500 max-w-sm">Insights run on custom algorithms matching stress to output proposals.</span>
+                          <button type="submit" className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg transition shadow shadow-indigo-600/10">Generate Core Feedback →</button>
+                        </div>
+                      </form>
+                    )}
+                  </div>
+
+                  <div className="space-y-4">
+                    <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest block">Archives</span>
+                    {reflectionsHistory.map((h, idx) => (
+                      <div key={idx} className="bg-[#0d0f17] border border-slate-800/80 rounded-xl p-5 space-y-3">
+                        <div className="flex justify-between items-center border-b border-slate-900 pb-2">
+                          <span className="text-xs font-extrabold text-slate-300">{h.date}</span>
+                          <div className="flex gap-3 text-[10px]"><span>Energy: <strong className="text-indigo-400">{h.energy}</strong></span><span>Mood: <strong className="text-cyan-400">{h.mood}</strong></span></div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-400">
+                          <div><strong className="text-slate-300 block mb-0.5">Wins:</strong><p>{h.wins}</p></div>
+                          <div><strong className="text-slate-300 block mb-0.5">Losses:</strong><p>{h.losses}</p></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* ── KPIs ── */}
+              {activeTab === 'kpis' && (
+                <div className="space-y-6 animate-fadeIn">
+                  <form onSubmit={addMetricLogs} className="bg-[#0d0f17] border border-slate-800 rounded-xl p-5 flex flex-wrap gap-4 items-end">
+                    {[
+                      { label: 'Clients Spoken With', key: 'clients',   ph: '5'    },
+                      { label: '1st Level Meetings',  key: 'meetings',  ph: '2'    },
+                      { label: 'Proposals Sent',      key: 'proposals', ph: '1'    },
+                      { label: 'Proposal Value ($)',   key: 'value',     ph: '8500' },
+                      { label: 'Won Revenue ($)',      key: 'revAdd',    ph: '2500' }
+                    ].map(({ label, key, ph }) => (
+                      <div key={key} className="flex-1 min-w-[120px] space-y-1.5">
+                        <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">{label}</label>
+                        <input type="number" value={metricLogForm[key]} onChange={e => setMetricLogForm(prev => ({ ...prev, [key]: e.target.value }))} placeholder={ph}
+                          className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500" />
+                      </div>
+                    ))}
+                    <button type="submit" className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg transition shadow">Log Pipeline Metrics</button>
+                  </form>
+
+                  <div className="bg-[#0d0f17] border border-slate-800 p-6 rounded-xl space-y-4">
+                    <div className="flex justify-between items-center">
+                      <div><h4 className="font-bold text-white text-base">Pipeline Goal Tracking</h4><p className="text-xs text-slate-500">Live tracker mapping proposals completed vs quarterly targets</p></div>
+                      <span className="text-xs text-slate-400">Target: ${pipelineMetrics.revenueTarget.toLocaleString()}</span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                      <div className="space-y-2">
+                        <span className="text-xs text-slate-500 block">Total Revenue Won</span>
+                        <span className="text-3xl font-black text-emerald-400">${pipelineMetrics.totalRevenue.toLocaleString()}</span>
+                        <p className="text-[11px] text-slate-400">You need ${(pipelineMetrics.revenueTarget - pipelineMetrics.totalRevenue).toLocaleString()} more to cross this cycle's targets.</p>
+                      </div>
+                      <div className="space-y-2">
+                        <span className="text-xs text-slate-500 block">Identified Proposal Value Pipeline</span>
+                        <span className="text-3xl font-black text-indigo-400">${pipelineMetrics.proposalValue.toLocaleString()}</span>
+                        <p className="text-[11px] text-slate-400">Covering {pipelineMetrics.proposalsSent} active proposals.</p>
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <div className="relative flex items-center justify-center">
+                          <svg className="w-24 h-24 transform -rotate-90">
+                            <circle cx="48" cy="48" r="38" strokeWidth="6" stroke="#1e293b" fill="transparent" />
+                            <circle cx="48" cy="48" r="38" strokeWidth="6" stroke="#10b981" fill="transparent"
+                              strokeDasharray={238.76}
+                              strokeDashoffset={238.76 - (238.76 * Math.min(100,(pipelineMetrics.totalRevenue/pipelineMetrics.revenueTarget)*100))/100}
+                              strokeLinecap="round" className="transition-all duration-1000 ease-out" />
+                          </svg>
+                          <div className="absolute flex flex-col items-center">
+                            <span className="text-lg font-black text-white">{Math.round((pipelineMetrics.totalRevenue/pipelineMetrics.revenueTarget)*100)}%</span>
+                            <span className="text-[8px] text-slate-400">Achieved</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {[
+                      { title: 'First-Level Meetings Booked', sub: 'Manual logged daily outreach cycles', key: 'meetings', color: ['from-indigo-600','to-indigo-400'], hoverColor: ['from-indigo-400','to-cyan-400'], labelFn: v => `${v} meetings`, valColor: 'text-indigo-400' },
+                      { title: 'Identified Proposal Value ($)', sub: 'Pipeline volumes generated',         key: 'proposalVal', color: ['from-emerald-600','to-teal-400'], hoverColor: ['from-emerald-400','to-cyan-400'], labelFn: v => `$${(v/1000).toFixed(1)}k`, valColor: 'text-emerald-400' }
+                    ].map(chart => {
+                      const maxVal = Math.max(...kpiHistory.map(k => k[chart.key]));
+                      return (
+                        <div key={chart.title} className="bg-[#0d0f17] border border-slate-800 rounded-xl p-6 space-y-4">
+                          <div><h4 className="font-bold text-white text-base">{chart.title}</h4><p className="text-xs text-slate-500">{chart.sub}</p></div>
+                          <div className="h-64 flex items-end justify-between relative pt-8 px-2 border-b border-l border-slate-800">
+                            {kpiHistory.map((k, idx) => {
+                              const hp = maxVal > 0 ? (k[chart.key] / maxVal) * 80 : 10;
+                              return (
+                                <div key={idx} className="flex-1 flex flex-col items-center group h-full justify-end relative">
+                                  <span className={`text-[10px] ${chart.valColor} font-bold opacity-0 group-hover:opacity-100 absolute -top-5 transition duration-200`}>{chart.labelFn(k[chart.key])}</span>
+                                  <div style={{ height: `${hp}%` }} className={`w-4 sm:w-8 bg-gradient-to-t ${chart.color[0]} ${chart.color[1]} rounded-t-sm group-hover:${chart.hoverColor[0]} group-hover:${chart.hoverColor[1]} transition-all duration-500`}></div>
+                                  <span className="text-[9px] text-slate-500 mt-2 font-semibold">{k.date}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* ── INSIGHTS ── */}
+              {activeTab === 'insights' && (
+                <div className="space-y-6 animate-fadeIn">
+                  <div className="bg-[#0d0f17] border border-slate-800 rounded-xl p-6 md:p-8 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/5 blur-3xl rounded-full pointer-events-none"></div>
+                    <div className="max-w-xl space-y-3 mb-8">
+                      <div className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse"></span><span className="text-[10px] text-indigo-400 uppercase font-black tracking-widest">Performance Matrix</span></div>
+                      <h3 className="text-2xl font-black text-white">Co-Pilot Executive Correlations</h3>
+                      <p className="text-xs text-slate-400 leading-relaxed">By matching outbound deal velocity against sleep quality scores, daily habits, and deep focus timers, we isolate active momentum factors.</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {INSIGHTS.map((insight, idx) => (
+                        <div key={idx} className="p-5 bg-slate-950 border border-slate-800 rounded-xl space-y-3 hover:border-slate-700/80 transition">
+                          <div>
+                            {insight.type === 'positive'    && <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-[9px] text-emerald-400 font-bold uppercase tracking-widest">Energy Peak Correlation</span>}
+                            {insight.type === 'warning'     && <span className="px-2 py-0.5 rounded bg-red-500/10 border border-red-500/30 text-[9px] text-red-400 font-bold uppercase tracking-widest">Stress Risk Factor</span>}
+                            {insight.type === 'correlation' && <span className="px-2 py-0.5 rounded bg-indigo-500/10 border border-indigo-500/30 text-[9px] text-indigo-400 font-bold uppercase tracking-widest">Pipeline Accelerator</span>}
+                            {insight.type === 'burnout'     && <span className="px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-[9px] text-amber-400 font-bold uppercase tracking-widest">Context Shift Alert</span>}
+                          </div>
+                          <p className="text-xs text-slate-300 leading-relaxed">"{insight.text}"</p>
+                          <div className="pt-2 border-t border-slate-900 flex justify-between items-center text-[10px] text-slate-500">
+                            <span>Confidence level: <strong>94% relational</strong></span>
+                            <span className="text-indigo-400 cursor-pointer hover:underline">Apply Strategy Override →</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+            </div>
+
+            {/* TOAST */}
+            {toast && (
+              <div className="fixed bottom-6 right-6 z-50 p-4 rounded-xl shadow-2xl bg-slate-900 border border-slate-800 text-xs text-slate-200 flex items-center gap-3 animate-slideUp max-w-sm">
+                <div className={`w-2.5 h-2.5 rounded-full ${toast.type === 'success' ? 'bg-emerald-400' : toast.type === 'warning' ? 'bg-red-400' : 'bg-cyan-400'}`}></div>
+                <span>{toast.message}</span>
+                <button onClick={() => setToast(null)} className="ml-auto font-bold text-slate-500 hover:text-white transition">&times;</button>
+              </div>
+            )}
+          </main>
+
+          {/* TASK DETAIL MODAL */}
+          {selectedTask && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
+              <div className="bg-[#0d0f17] border border-slate-800 rounded-xl w-full max-w-lg overflow-hidden flex flex-col shadow-2xl">
+                <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/40">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-mono text-indigo-400 bg-indigo-400/10 px-2 py-0.5 rounded uppercase tracking-wider font-bold">Edit Task Details</span>
+                    {selectedTask.is_revenue_generating && <span className="text-[10px] font-mono text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded uppercase tracking-wider font-bold">$$ Rev Gen</span>}
+                  </div>
+                  <button onClick={() => setSelectedTask(null)} className="text-slate-400 hover:text-white transition text-lg font-bold">&times;</button>
+                </div>
+
+                <div className="p-5 space-y-4 max-h-[450px] overflow-y-auto">
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest font-black block">Task Title</label>
+                    <input type="text" value={selectedTask.title} onChange={e => updateTaskField(selectedTask.id, 'title', e.target.value)}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 font-semibold" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest font-black block">Description</label>
+                    <textarea rows="3" value={selectedTask.description || ''} onChange={e => updateTaskField(selectedTask.id, 'description', e.target.value)}
+                      placeholder="Additional notes..."
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 leading-relaxed" />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-[10px] text-slate-500 tracking-widest font-black uppercase block">Status</label>
+                      <select value={selectedTask.status} onChange={e => updateTaskField(selectedTask.id, 'status', e.target.value)}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-2 text-xs text-slate-300 focus:outline-none cursor-pointer">
+                        <option value="backlog">Task Backlog</option><option value="this_week">This Week</option><option value="today">Today (Focus)</option><option value="done">Fully Executed</option>
+                      </select>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] text-slate-500 tracking-widest font-black uppercase block">Priority</label>
+                      <select value={selectedTask.priority} onChange={e => updateTaskField(selectedTask.id, 'priority', e.target.value)}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-2 text-xs text-slate-300 focus:outline-none cursor-pointer">
+                        <option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-[10px] text-slate-500 tracking-widest font-black uppercase block">Execution Hour</label>
+                      <input type="text" value={selectedTask.scheduledTime || ''} placeholder="e.g. 11:30 AM"
+                        onChange={e => updateTaskField(selectedTask.id, 'scheduledTime', e.target.value || null)}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-indigo-500" />
+                    </div>
+                    <div className="flex flex-col justify-end">
+                      <button type="button" onClick={() => updateTaskField(selectedTask.id, 'is_revenue_generating', !selectedTask.is_revenue_generating)}
+                        className={`py-2 px-3 rounded-lg border text-xs font-bold transition flex items-center justify-center gap-1.5 ${selectedTask.is_revenue_generating ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300' : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'}`}>
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        Revenue Generating
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 border-t border-slate-800/80 pt-4">
+                    <label className="text-[10px] text-slate-500 uppercase tracking-widest font-black block">Tag Manager</label>
+                    <form onSubmit={handleAddTagToModal} className="flex gap-2">
+                      <input type="text" placeholder="New tag..." value={modalNewTagText} onChange={e => setModalNewTagText(e.target.value)}
+                        className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500" />
+                      <button type="submit" className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-lg transition">Add Tag</button>
+                    </form>
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {(selectedTask.tags || []).length === 0
+                        ? <span className="text-xs text-slate-600 italic">No tags assigned.</span>
+                        : (selectedTask.tags || []).map((tg, idx) => (
+                          <span key={idx} className="px-2.5 py-1 bg-slate-950 border border-slate-800 rounded-full text-xs text-indigo-400 font-semibold flex items-center gap-1.5 animate-fadeIn">
+                            #{tg}
+                            <button type="button" onClick={() => handleRemoveTagFromModal(tg)} className="hover:text-red-400 text-slate-500 font-bold transition text-[10px]">&times;</button>
+                          </span>
+                        ))
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-slate-900/40 border-t border-slate-800 flex items-center justify-between gap-2">
+                  <button type="button" onClick={() => deleteTask(selectedTask.id)}
+                    className="px-4 py-2 bg-red-600/10 hover:bg-red-600/25 border border-red-500/30 text-red-400 hover:text-red-300 text-xs font-bold rounded-lg transition flex items-center gap-1">
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                    Delete Task
+                  </button>
+                  <button type="button" onClick={() => setSelectedTask(null)} className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-black rounded-lg transition">Save & Close</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
